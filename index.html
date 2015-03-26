@@ -41,17 +41,20 @@
 	</style>
 </head>
 <body>
+<script src="fileAPI.js"></script>
 
 <form id="mark">
 	<p><b>Отметки:</b><br>
-		<input type="text">
-
-</form>
-<form name="upload">
-	<input type="file" name="file1">
-	<input type="submit" value="Загрузить">
 </form>
 
+<div>
+	<!-- "js-fileapi-wrapper" -- обязательный class -->
+	<div class="js-fileapi-wrapper upload-btn" id="choose">
+		<div class="upload-btn__txt">Choose files</div>
+		<input name="files" type="file" multiple />
+	</div>
+	<div id="images"><!-- предпросмотр --></div>
+</div>
 
 <button onclick="addMark()">Добавить отметку</button>
 <button onclick="fasten(this.name)" name="descart">Зафиксировать систему координат</button>
@@ -125,7 +128,7 @@ var countMarkX = 0;
 				"stroke-width": 30
 			});
 
-	descart.append("circle")
+	var zero = descart.append("circle")
 			.attr("id", "zero")
 			.attr("cx", centrWSVGdescart)
 			.attr("cy", centrHSVGdescart)
@@ -145,16 +148,33 @@ var countMarkX = 0;
 		if(name === "graph")graph.classed("descart", fastenFlag[name] = !fastenFlag[name]);
 	}
 
+	function engine (mark) {
+		var value = mark.input.value;
+		mark.value = value = parseFloat(value);
+		if(!mark.text) {
+			mark.text = mark.g.append("text")
+					.attr("x", centrWSVGdescart + 100)
+					.attr("y", centrHSVGdescart + 60)
+		}
+		mark.text.text(value);
+
+		calc(mark.name);
+
+	}
 
 	function addMark() {
 		var name = "mark" + countMarkX++;
 		var mark = marks[name] = {};
+		mark.name = name;
 		mark.input = d3.select("#mark")
 				.append("input")
 				.attr("name", name)
-				.attr("type", "text");
-
+				.attr("type", "text")[0][0];
+		mark.input.onchange = function () {
+			engine(mark);
+		};
 		mark.g = descart.append("g")
+				.attr("id", name)
 				.classed("point", true);
 
 		mark.g.append("line")
@@ -167,6 +187,7 @@ var countMarkX = 0;
 					"stroke-width": 1
 				});
 		mark.g.append("line")
+				.attr("id", "area")
 				.attr("x1", centrWSVGdescart + 100)
 				.attr("y1", centrHSVGdescart - 50)
 				.attr("x2", centrWSVGdescart + 100)
@@ -176,9 +197,68 @@ var countMarkX = 0;
 					"opacity": 0,
 					"stroke-width": 30
 				});
+
+		mark.centr = mark.g.append("circle")
+				.attr("id", "zero")
+				.attr("cx", centrWSVGdescart + 100)
+				.attr("cy", centrHSVGdescart)
+				.attr("r", 1)
+				.style({
+					"stroke": "black",
+					"stroke-width": 2
+				});
+		mark.x = 100;
+		mark.y = 0;
 	}
 
 
+	function eng(event) {
+		var mark = marks[event.target.id];
+		mark.x += event.dx;
+		calc(event.target.id);
+	}
+
+function calc (name) {
+	var mark = marks[name];
+	if ((mark.value * mark.x) < 0) {
+		conflict (true, mark)
+	} else {
+		conflict (false, mark)
+	}
+//	console.log(mark.value / mark.x);
+}
+
+	function conflict (flag, mark) {
+		if (flag) {
+			if (!mark.conflict || !mark.conflict.interval) {
+				mark.conflict = {};
+				mark.conflict.flag = true;
+				mark.conflict.interval = setInterval(function () {
+					mark.g.select("line#area")
+							.transition()
+							.duration(500)
+							.style({
+								"opacity": (function (flag) {
+									mark.conflict.flag = !flag;
+									console.log(flag);
+									return flag?1:0;
+								})(mark.conflict.flag)
+							})
+				}, 500)
+			}
+		} else {
+			if (mark.conflict && mark.conflict.interval) {
+				clearInterval(mark.conflict.interval);
+				mark.conflict.interval = 0;
+				mark.g.select("line#area")
+						.transition()
+						.duration(500)
+						.style({
+							"opacity": 0
+						})
+			}
+		}
+	}
 	interact('.descart')
 			.draggable({
 				inertia: true,
@@ -228,6 +308,7 @@ var countMarkX = 0;
 					target.style.webkitTransform =
 							target.style.transform =
 									'translate(' + x + 'px, ' + y + 'px)';
+					eng(event);
 
 					// update the posiion attributes
 					target.setAttribute('data-x', x);
@@ -246,52 +327,10 @@ var countMarkX = 0;
 
 
 
-	var form = document.forms.upload;
-	form.onsubmit = function() {
-		var file = this.elements.file1.files[0];
-		alert(this.elements.file1.files[0]);
-		if (file) upload(file, onSuccess, onError, onProgress);
-		return false;
-	}
-
-	function upload(file, onSuccess, onError, onProgress) {
-
-		console.log(file);
-		return false;
-		var xhr = new XMLHttpRequest();
-
-		xhr.onload = xhr.onerror = function() {
-			if(this.status != 200 || this.responseText != 'OK') {
-				onError(this);
-				return;
-			}
-			onSuccess();
-		};
-
-
-		xhr.upload.onprogress = function(event) {
-			onProgress(event.loaded, event.total);
-		}
-
-
-		xhr.open("POST", "upload.php", true);
-		xhr.send(file);
-
-	}
 
 
 
 </script>
-<script src="fileAPI.js"></script>
-
-<div>
-	<!-- "js-fileapi-wrapper" -- обязательный class -->
-	<div class="js-fileapi-wrapper upload-btn" id="choose">
-		<div class="upload-btn__txt">Choose files</div>
-		<input name="files" type="file" multiple />
-	</div>
-	<div id="images"><!-- предпросмотр --></div>
-</div>
 
 <!--<script>window.FileAPI = { staticPath: '/js/FileAPI/dist/' };</script>-->
 <!--<script src="/js/FileAPI/dist/FileAPI.min.js"></script>-->
@@ -306,14 +345,6 @@ var countMarkX = 0;
 			return  false;
 		}, function (files/**Array*/, rejected/**Array*/){
 			if( files.length ){
-				// Создаем предпросмотр 100x100
-				console.log(files);
-				FileAPI.each(files, function (file){
-					FileAPI.Image(file).preview(700).get(function (err, img){
-						console.log(img);
-						images.appendChild(img);
-					});
-				});
 
 				graph = svg.insert("image", 'g#descart')
 						.classed("descart", true)
@@ -330,31 +361,6 @@ var countMarkX = 0;
 		});
 	});
 </script>
-
-
-
-<svg id="mySVG" width="1000" height="2000" >
-	<image xlink:href="1418379167_proizvoditelnost-nasosa-kotla-baksi.-obrezka.jpg" x="0" y="0" height="483px" width="736px"/>
-	<g  id="drag-me" class="draggable">
-		<line x1="100" y1="-1000" x2="100" y2="2000" style="stroke:rgb(255,0,0);stroke-width:2" />
-		<g class="point">
-			<line x1="150" y1="150" x2="150" y2="250" style="stroke:rgb(27,7,100);stroke-width:2" />
-		</g>
-		<line x1="-1000" y1="200" x2="1000" y2="200" style="stroke:rgb(255,0,0);stroke-width:2" />
-	</g>
-
-	<g class="draggable">
-		<path d="M 20 70 L 140 70 M 170 70 L 280 70" id="svg_2" stroke-linecap="null" stroke-linejoin="null" stroke-width="5" stroke="#000000" fill="none"/>
-	</g>
-
-	<svg viewBox="0 100 800 800">
-		<rect  id="maroonRect"  x="200" y="200" width="160" height="60" fill="maroon" stroke="black" stroke-width="2"  />
-	</svg>
-	<g id="myG" >
-		<rect id="blueRect"  x="220" y="250" width="60" height="60" fill="blue" stroke="black" stroke-width="2"  />
-	</g>
-	<circle id='blackCircle' r=10 fill=black />
-</svg>
 
 </body>
 </html>
