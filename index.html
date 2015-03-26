@@ -221,14 +221,14 @@ var countMarkX = 0;
 function calc (name) {
 	var mark = marks[name];
 	if ((mark.value * mark.x) < 0) {
-		conflict (true, mark)
+		conflict (true, mark, 'Масштаб не может быть отрицательным')
 	} else {
 		conflict (false, mark)
 	}
 //	console.log(mark.value / mark.x);
 }
 
-	function conflict (flag, mark) {
+	function conflict (flag, mark, textError) {
 		if (flag) {
 			if (!mark.conflict || !mark.conflict.interval) {
 				mark.conflict = {};
@@ -244,12 +244,19 @@ function calc (name) {
 									return flag?1:0;
 								})(mark.conflict.flag)
 							})
-				}, 500)
+				}, 500);
+				mark.conflict.textError = mark.g.append("text")
+						.attr("id", "textError")
+						.attr("x", centrWSVGdescart + 100)
+						.attr("y", centrHSVGdescart - 60)
+						.text(textError);
 			}
 		} else {
 			if (mark.conflict && mark.conflict.interval) {
 				clearInterval(mark.conflict.interval);
 				mark.conflict.interval = 0;
+				mark.g.select("#textError")
+						.remove();
 				mark.g.select("line#area")
 						.transition()
 						.duration(500)
