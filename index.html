@@ -53,8 +53,9 @@
 </form>
 
 
-<button onclick="add1()">Добавить отметку</button>
-<button onclick="fasten()">Зафиксировать систему координат</button>
+<button onclick="addMark()">Добавить отметку</button>
+<button onclick="fasten(this.name)" name="descart">Зафиксировать систему координат</button>
+<button onclick="fasten(this.name)" name="graph">Зафиксировать график</button>
 
 
 <script type="text/javascript">
@@ -62,8 +63,13 @@
 	var heightSVGdescart = screen.height * 0.75;
 	var centrHSVGdescart = screen.height * 0.75 / 2;
 	var centrWSVGdescart = document.body.clientWidth / 2;
-	var fastenFlag = true;
-
+	var fastenFlag = {
+		"graph": true,
+		"descart": true
+	};
+	var graph;
+var countMarkX = 0;
+	var marks = {};
 	//Create SVG element
 	var svg = d3.select("body")
 			.append("svg")
@@ -134,20 +140,24 @@
 
 
 
-	function fasten () {
-		descart.classed("descart", fastenFlag = !fastenFlag)
+	function fasten (name) {
+		if(name === "descart")descart.classed("descart", fastenFlag[name] = !fastenFlag[name]);
+		if(name === "graph")graph.classed("descart", fastenFlag[name] = !fastenFlag[name]);
 	}
 
 
-	function add1() {
-		var form = d3.select("#mark")
+	function addMark() {
+		var name = "mark" + countMarkX++;
+		var mark = marks[name] = {};
+		mark.input = d3.select("#mark")
 				.append("input")
+				.attr("name", name)
 				.attr("type", "text");
 
-		var g = descart.append("g")
+		mark.g = descart.append("g")
 				.classed("point", true);
 
-		g.append("line")
+		mark.g.append("line")
 				.attr("x1", centrWSVGdescart + 100)
 				.attr("y1", centrHSVGdescart - 50)
 				.attr("x2", centrWSVGdescart + 100)
@@ -156,7 +166,7 @@
 					"stroke": "red",
 					"stroke-width": 1
 				});
-		g.append("line")
+		mark.g.append("line")
 				.attr("x1", centrWSVGdescart + 100)
 				.attr("y1", centrHSVGdescart - 50)
 				.attr("x2", centrWSVGdescart + 100)
@@ -239,6 +249,7 @@
 	var form = document.forms.upload;
 	form.onsubmit = function() {
 		var file = this.elements.file1.files[0];
+		alert(this.elements.file1.files[0]);
 		if (file) upload(file, onSuccess, onError, onProgress);
 		return false;
 	}
@@ -246,7 +257,7 @@
 	function upload(file, onSuccess, onError, onProgress) {
 
 		console.log(file);
-		return
+		return false;
 		var xhr = new XMLHttpRequest();
 
 		xhr.onload = xhr.onerror = function() {
@@ -271,6 +282,56 @@
 
 
 </script>
+<script src="fileAPI.js"></script>
+
+<div>
+	<!-- "js-fileapi-wrapper" -- обязательный class -->
+	<div class="js-fileapi-wrapper upload-btn" id="choose">
+		<div class="upload-btn__txt">Choose files</div>
+		<input name="files" type="file" multiple />
+	</div>
+	<div id="images"><!-- предпросмотр --></div>
+</div>
+
+<!--<script>window.FileAPI = { staticPath: '/js/FileAPI/dist/' };</script>-->
+<!--<script src="/js/FileAPI/dist/FileAPI.min.js"></script>-->
+<script>
+	FileAPI.event.on(choose, 'change', function (evt){
+		var files = FileAPI.getFiles(evt); // Retrieve file list
+
+		FileAPI.filterFiles(files, function (file, info/**Object*/){
+			if( /^image/.test(file.type) ){
+				return  info.width >= 320 && info.height >= 240;
+			}
+			return  false;
+		}, function (files/**Array*/, rejected/**Array*/){
+			if( files.length ){
+				// Создаем предпросмотр 100x100
+				console.log(files);
+				FileAPI.each(files, function (file){
+					FileAPI.Image(file).preview(700).get(function (err, img){
+						console.log(img);
+						images.appendChild(img);
+					});
+				});
+
+				graph = svg.insert("image", 'g#descart')
+						.classed("descart", true)
+						.attr("xlink:href", files[0].name)
+						.attr("x", 0)
+						.attr("y", 0)
+						.attr("height", 483)
+						.attr("width", 736);
+
+
+
+				// Загружаем файлы
+			}
+		});
+	});
+</script>
+
+
 
 <svg id="mySVG" width="1000" height="2000" >
 	<image xlink:href="1418379167_proizvoditelnost-nasosa-kotla-baksi.-obrezka.jpg" x="0" y="0" height="483px" width="736px"/>
