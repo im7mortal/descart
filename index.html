@@ -42,6 +42,7 @@
 </head>
 <body>
 <script src="fileAPI.js"></script>
+<script src="simplify.js"></script>
 
 <form id="mark">
 	<p><b>Отметки:</b><br>
@@ -61,6 +62,7 @@
 <button onclick="fasten(this.name)" name="descart">Зафиксировать систему координат</button>
 <button onclick="fasten(this.name)" name="graph">Зафиксировать график</button>
 <button onclick="new Point()">Добавить точку</button>
+<button onclick="rush()">RUSh</button>
 
 
 
@@ -74,11 +76,13 @@
 		"descart": true
 	};
 	var graph;
+	var countPoints = 0;
 var countMark = {
 	"x": 0,
 	"y": 0
 };
 	var marks = {};
+	var points = {};
 	//Create SVG element
 	var svg = d3.select("body")
 			.append("svg")
@@ -155,10 +159,64 @@ var countMark = {
 	}
 
 
+    function Point () {
+        this.name = "point" + countPoints++;
+        points[this.name] = this;
+        var self = this;
+//        this.input = d3.select("#mark")
+//                .append("input")
+//                .attr("name", this.name)
+//                .attr("type", "text")[0][0];
+//        this.input.onchange = this.engine.bind(this);
+
+        this.g = descart.append("g")
+                .attr("id", this.name)
+                .classed("point", true);
+
+        var cx = widthSVGdescart / 2 + 20,
+                cy = heightSVGdescart / 2 - 20;
+
+        this.x = 20;
+        this.y = 20;
+        this.point = this.g.append("circle")
+                .attr("id", "zero")
+                .attr("cx", cx)
+                .attr("cy", cy)
+                .attr("r", 1.5)
+                .style({
+                    "stroke": "black"
+                });
+
+        this.g.append("circle")
+                .attr("id", "zero")
+                .attr("cx", cx)
+                .attr("cy", cy)
+                .attr("r", 20)
+                .style({
+                    "stroke": "black",
+                    "opacity": 0
+                });
+
+    }
 
 
+    Point.prototype.calc = function () {
+        /*if ((this.value * this.quantity) < 0) {
+            this.resolveConflict (true, 'Масштаб не может быть отрицательным')
+        } else {
+            this.resolveConflict (false)
+        }*/
+
+//		console.log(this.value / this.quantity);
+    };
 
 
+    Point.prototype.eng = function (event) {
+            this.x += event.dx;
+            this.y -= event.dy;
+        console.log(this.x, this.y);
+        this.calc();
+    };
 
 
 	function Mark (axes) {
@@ -307,7 +365,30 @@ var countMark = {
 	};
 
 
+function rush () {
+    var data = simplify(d3.map(points).values());
 
+    var line = d3.svg.line()
+            .x(function(d) { return d.x + centrWSVGdescart; })
+            .y(function(d) { return centrHSVGdescart - d.y; });
+
+
+    svg.append("path")
+            .datum(data)
+            .attr("class", "descart")
+            .attr("d", line)
+            .style({
+                "fill": "none",
+    "stroke": "steelblue",
+    "stroke-width": 1.5
+});
+
+
+
+
+
+
+}
 
 	interact('.descart')
 			.draggable({
@@ -324,6 +405,36 @@ var countMark = {
 							target.style.transform =
 									'translate(' + x + 'px, ' + y + 'px)';
 
+					// update the posiion attributes
+					target.setAttribute('data-x', x);
+					target.setAttribute('data-y', y);
+				},
+				// call this function on every dragend event
+				onend: function (event) {
+					var textEl = event.target.querySelector('p');
+
+					textEl && (textEl.textContent =
+							'moved a distance of '
+							+ (Math.sqrt(event.dx * event.dx +
+							event.dy * event.dy)|0) + 'px');
+				}
+			});
+
+	interact('.point')
+			.draggable({
+				inertia: true,
+				restrict: {
+					elementRect: { top: 0, left: 0, bottom: 1, right: 1 }
+				},
+				onmove: function (event) {
+					var target = event.target,
+							x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx,
+							y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
+					// translate the element
+					target.style.webkitTransform =
+							target.style.transform =
+									'translate(' + x + 'px, ' + y + 'px)';
+                    points[event.target.id].eng(event);
 					// update the posiion attributes
 					target.setAttribute('data-x', x);
 					target.setAttribute('data-y', y);
