@@ -56,7 +56,8 @@
 	<div id="images"><!-- предпросмотр --></div>
 </div>
 
-<button onclick="addMark()">Добавить отметку</button>
+<button onclick="new Mark('x')">Добавить отметку X</button>
+<button onclick="new Mark('y')">Добавить отметку Y</button>
 <button onclick="fasten(this.name)" name="descart">Зафиксировать систему координат</button>
 <button onclick="fasten(this.name)" name="graph">Зафиксировать график</button>
 
@@ -71,7 +72,10 @@
 		"descart": true
 	};
 	var graph;
-var countMarkX = 0;
+var countMark = {
+	"x": 0,
+	"y": 0
+};
 	var marks = {};
 	//Create SVG element
 	var svg = d3.select("body")
@@ -148,116 +152,108 @@ var countMarkX = 0;
 		if(name === "graph")graph.classed("descart", fastenFlag[name] = !fastenFlag[name]);
 	}
 
-	function engine (mark) {
-		var value = mark.input.value;
-		mark.value = value = parseFloat(value);
-		if(!mark.text) {
-			mark.text = mark.g.append("text")
-					.attr("x", centrWSVGdescart + 100)
-					.attr("y", centrHSVGdescart + 60)
-		}
-		mark.text.text(value);
 
-		calc(mark.name);
 
-	}
 
-	function addMark() {
-		var name = "mark" + countMarkX++;
-		var mark = marks[name] = {};
-		mark.name = name;
-		mark.input = d3.select("#mark")
+
+
+
+
+	function Mark (axes) {
+		this.name = "mark_" + axes + countMark[axes]++;
+		marks[this.name] = this;
+		var self = this;
+		this.axes = axes;
+		this.input = d3.select("#mark")
 				.append("input")
-				.attr("name", name)
+				.attr("name", this.name)
 				.attr("type", "text")[0][0];
-		mark.input.onchange = function () {
-			engine(mark);
-		};
-		mark.g = descart.append("g")
-				.attr("id", name)
-				.classed("point", true);
+		this.input.onchange = this.engine.bind(this);
+		this.g = descart.append("g")
+				.attr("id", this.name);
+		var x1, x2, y1, y2, cx, cy;
+		if (axes === 'x') {
+			this.x = 100;
+			this.y = 0;
+			x1 = x2 = cx = centrWSVGdescart + 100;
+			y1 = centrHSVGdescart - 50;
+			y2 = centrHSVGdescart + 50;
+			cy = centrHSVGdescart;
+			this.g.classed("pointx", true)
+		} else {
+			this.x = 100;
+			this.y = 0;
+			x1 = centrWSVGdescart - 50;
+			x2 = centrWSVGdescart + 50;
+			cx = centrWSVGdescart;
+			y1 = y2 = cy =centrHSVGdescart - 100;
+			this.g.classed("pointy", true)
+		}
 
-		mark.g.append("line")
-				.attr("x1", centrWSVGdescart + 100)
-				.attr("y1", centrHSVGdescart - 50)
-				.attr("x2", centrWSVGdescart + 100)
-				.attr("y2", centrHSVGdescart + 50)
+
+		this.g.append("line")
+				.attr("x1", x1)
+				.attr("y1", y1)
+				.attr("x2", x2)
+				.attr("y2", y2)
 				.style({
 					"stroke": "red",
 					"stroke-width": 1
 				});
-		mark.g.append("line")
+		this.g.append("line")
 				.attr("id", "area")
-				.attr("x1", centrWSVGdescart + 100)
-				.attr("y1", centrHSVGdescart - 50)
-				.attr("x2", centrWSVGdescart + 100)
-				.attr("y2", centrHSVGdescart + 50)
+				.attr("x1", x1)
+				.attr("y1", y1)
+				.attr("x2", x2)
+				.attr("y2", y2)
 				.style({
 					"stroke": "red",
 					"opacity": 0,
 					"stroke-width": 30
 				});
 
-		mark.centr = mark.g.append("circle")
+		this.centr = this.g.append("circle")
 				.attr("id", "zero")
-				.attr("cx", centrWSVGdescart + 100)
-				.attr("cy", centrHSVGdescart)
+				.attr("cx", cx)
+				.attr("cy", cy)
 				.attr("r", 1)
 				.style({
 					"stroke": "black",
 					"stroke-width": 2
 				});
-		mark.x = 100;
-		mark.y = 0;
+
 	}
 
-
-	function eng(event) {
-		var mark = marks[event.target.id];
-		mark.x += event.dx;
-		calc(event.target.id);
-	}
-
-function calc (name) {
-	var mark = marks[name];
-	if ((mark.value * mark.x) < 0) {
-		conflict (true, mark, 'Масштаб не может быть отрицательным')
-	} else {
-		conflict (false, mark)
-	}
-//	console.log(mark.value / mark.x);
-}
-
-	function conflict (flag, mark, textError) {
+	Mark.prototype.resolveConflict = function (flag, textError) {
+		var self = this;
 		if (flag) {
-			if (!mark.conflict || !mark.conflict.interval) {
-				mark.conflict = {};
-				mark.conflict.flag = true;
-				mark.conflict.interval = setInterval(function () {
-					mark.g.select("line#area")
+			if (!this.conflict || !this.conflict.interval) {
+				this.conflict = {};
+				this.conflict.flag = true;
+				this.conflict.interval = setInterval(function () {
+					self.g.select("line#area")
 							.transition()
 							.duration(500)
 							.style({
 								"opacity": (function (flag) {
-									mark.conflict.flag = !flag;
-									console.log(flag);
+									self.conflict.flag = !flag;
 									return flag?1:0;
-								})(mark.conflict.flag)
+								})(self.conflict.flag)
 							})
 				}, 500);
-				mark.conflict.textError = mark.g.append("text")
+				this.conflict.textError = this.g.append("text")
 						.attr("id", "textError")
 						.attr("x", centrWSVGdescart + 100)
 						.attr("y", centrHSVGdescart - 60)
 						.text(textError);
 			}
 		} else {
-			if (mark.conflict && mark.conflict.interval) {
-				clearInterval(mark.conflict.interval);
-				mark.conflict.interval = 0;
-				mark.g.select("#textError")
+			if (this.conflict && this.conflict.interval) {
+				clearInterval(this.conflict.interval);
+				this.conflict.interval = 0;
+				this.g.select("#textError")
 						.remove();
-				mark.g.select("line#area")
+				this.g.select("line#area")
 						.transition()
 						.duration(500)
 						.style({
@@ -265,7 +261,60 @@ function calc (name) {
 						})
 			}
 		}
+	};
+
+	Mark.prototype.engine = function () {
+		this.value = parseFloat(this.input.value);
+		if(!this.text) {
+			this.text = this.g.append("text");
+			if (this.axes === 'x') {
+				this.text.attr("x", centrWSVGdescart + 100)
+						.attr("y", centrHSVGdescart + 60)
+			} else {
+				this.text.attr("x", centrWSVGdescart - 65)
+						.attr("y", centrHSVGdescart - 105)
+			}
+		}
+		this.text.text(this.value);
+		this.calc();
+	};
+
+
+
+
+	Mark.prototype.calc = function () {
+		if ((this.value * this.x) < 0) {
+			this.resolveConflict (true, 'Масштаб не может быть отрицательным')
+		} else {
+			this.resolveConflict (false)
+		}
+
+		console.log(this.value / this.x);
+	};
+
+
+	function eng(event) {
+		var mark = marks[event.target.id];
+		mark.x += event.dx;
+		mark.calc(event.target.id);
 	}
+
+
+
+
+
+function calc (name) {
+	var mark = marks[name];
+	if ((mark.value * mark.x) < 0) {
+		mark.conflict (true, mark, 'Масштаб не может быть отрицательным')
+	} else {
+		mark.conflict (false, mark)
+	}
+
+	console.log(mark.value / mark.x);
+}
+
+
 	interact('.descart')
 			.draggable({
 				inertia: true,
@@ -296,7 +345,7 @@ function calc (name) {
 				}
 			});
 
-	interact('.point')
+	interact('.pointx')
 			.draggable({
 				// enable inertial throwing
 				inertia: true,
@@ -311,6 +360,42 @@ function calc (name) {
 					// keep the dragged position in the data-x/data-y attributes
 							x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx,
 							y = 0;
+					// translate the element
+					target.style.webkitTransform =
+							target.style.transform =
+									'translate(' + x + 'px, ' + y + 'px)';
+					eng(event);
+
+					// update the posiion attributes
+					target.setAttribute('data-x', x);
+					target.setAttribute('data-y', y);
+				},
+				// call this function on every dragend event
+				onend: function (event) {
+					var textEl = event.target.querySelector('p');
+					textEl && (textEl.textContent =
+							'moved a distance of '
+							+ (Math.sqrt(event.dx * event.dx +
+							event.dy * event.dy)|0) + 'px');
+				}
+
+			});
+
+	interact('.pointy')
+			.draggable({
+				// enable inertial throwing
+				inertia: true,
+				// keep the element within the area of it's parent
+				restrict: {
+					elementRect: { left: 0, right: 0, top: 1, bottom: 1 }
+				},
+
+				// call this function on every dragmove event
+				onmove: function (event) {
+					var target = event.target,
+					// keep the dragged position in the data-x/data-y attributes
+							x = 0,
+							y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
 					// translate the element
 					target.style.webkitTransform =
 							target.style.transform =
