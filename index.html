@@ -60,6 +60,8 @@
 <button onclick="new Mark('y')">Добавить отметку Y</button>
 <button onclick="fasten(this.name)" name="descart">Зафиксировать систему координат</button>
 <button onclick="fasten(this.name)" name="graph">Зафиксировать график</button>
+<button onclick="new Point()">Добавить точку</button>
+
 
 
 <script type="text/javascript">
@@ -172,17 +174,19 @@ var countMark = {
 		this.g = descart.append("g")
 				.attr("id", this.name);
 		var x1, x2, y1, y2, cx, cy;
-		if (axes === 'x') {
+		if (this.axes === 'x') {
 			this.x = 100;
 			this.y = 0;
-			x1 = x2 = cx = centrWSVGdescart + 100;
+            this.quantity = this.x;
+            x1 = x2 = cx = centrWSVGdescart + 100;
 			y1 = centrHSVGdescart - 50;
 			y2 = centrHSVGdescart + 50;
 			cy = centrHSVGdescart;
 			this.g.classed("pointx", true)
 		} else {
-			this.x = 100;
-			this.y = 0;
+			this.x = 0;
+			this.y = -100;
+			this.quantity = this.y + 200;
 			x1 = centrWSVGdescart - 50;
 			x2 = centrWSVGdescart + 50;
 			cx = centrWSVGdescart;
@@ -283,36 +287,26 @@ var countMark = {
 
 
 	Mark.prototype.calc = function () {
-		if ((this.value * this.x) < 0) {
+		if ((this.value * this.quantity) < 0) {
 			this.resolveConflict (true, 'Масштаб не может быть отрицательным')
 		} else {
 			this.resolveConflict (false)
 		}
 
-		console.log(this.value / this.x);
+//		console.log(this.value / this.quantity);
 	};
 
 
-	function eng(event) {
-		var mark = marks[event.target.id];
-		mark.x += event.dx;
-		mark.calc(event.target.id);
-	}
+    Mark.prototype.eng = function (event) {
+        if (this.axes === 'x') {
+            this.quantity += event.dx;
+        } else {
+            this.quantity -= event.dy;
+        }
+        this.calc();
+	};
 
 
-
-
-
-function calc (name) {
-	var mark = marks[name];
-	if ((mark.value * mark.x) < 0) {
-		mark.conflict (true, mark, 'Масштаб не может быть отрицательным')
-	} else {
-		mark.conflict (false, mark)
-	}
-
-	console.log(mark.value / mark.x);
-}
 
 
 	interact('.descart')
@@ -364,7 +358,7 @@ function calc (name) {
 					target.style.webkitTransform =
 							target.style.transform =
 									'translate(' + x + 'px, ' + y + 'px)';
-					eng(event);
+                    marks[event.target.id].eng(event);
 
 					// update the posiion attributes
 					target.setAttribute('data-x', x);
@@ -400,7 +394,7 @@ function calc (name) {
 					target.style.webkitTransform =
 							target.style.transform =
 									'translate(' + x + 'px, ' + y + 'px)';
-					eng(event);
+                    marks[event.target.id].eng(event);
 
 					// update the posiion attributes
 					target.setAttribute('data-x', x);
