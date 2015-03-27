@@ -214,7 +214,6 @@ var countMark = {
     Point.prototype.eng = function (event) {
             this.x += event.dx;
             this.y -= event.dy;
-        console.log(this.x, this.y);
         this.calc();
     };
 
@@ -364,31 +363,72 @@ var countMark = {
         this.calc();
 	};
 
-
+var path;
 function rush () {
-    var data = simplify(d3.map(points).values());
-
+    var data = getDataPath();
+console.log(data);
     var line = d3.svg.line()
             .x(function(d) { return d.x + centrWSVGdescart; })
             .y(function(d) { return centrHSVGdescart - d.y; });
+	if (path) {
+		path.remove();
+	}
 
-
-    svg.append("path")
+    path = descart.append("path")
             .datum(data)
-            .attr("class", "descart")
             .attr("d", line)
             .style({
                 "fill": "none",
     "stroke": "steelblue",
     "stroke-width": 1.5
 });
-
-
-
-
-
-
 }
+
+	function buildDataPath() {
+		return d3.map(points).values()
+				.map(function(object) {
+					return {
+						"x": object.x,
+						"y": object.y
+					}
+				})
+				.sort(function (object1, object2) {
+			if (object1.x > object2.x) {
+				return 1;
+			} else {
+				return -1;
+			}
+		})
+	}function getDataPath() {
+		var data = buildDataPath();
+		var csv = "";
+		data.forEach(function(o) {
+			csv += o.x + ", " + o.y + "\n";
+		});
+		console.log(csv);
+		return data
+	}
+
+	function autoRender() {
+		if (path) {
+			path.remove();
+			var data = getDataPath();
+			var line = d3.svg.line()
+					.x(function(d) { return d.x + centrWSVGdescart; })
+					.y(function(d) { return centrHSVGdescart - d.y; });
+			path = descart.append("path")
+					.datum(data)
+					.attr("d", line)
+					.style({
+						"fill": "none",
+						"stroke": "steelblue",
+						"stroke-width": 1.5
+					});
+		}
+	}
+
+
+
 
 	interact('.descart')
 			.draggable({
@@ -438,15 +478,11 @@ function rush () {
 					// update the posiion attributes
 					target.setAttribute('data-x', x);
 					target.setAttribute('data-y', y);
+					autoRender();
 				},
 				// call this function on every dragend event
 				onend: function (event) {
-					var textEl = event.target.querySelector('p');
 
-					textEl && (textEl.textContent =
-							'moved a distance of '
-							+ (Math.sqrt(event.dx * event.dx +
-							event.dy * event.dy)|0) + 'px');
 				}
 			});
 
@@ -548,8 +584,8 @@ function rush () {
 						.attr("xlink:href", files[0].name)
 						.attr("x", 0)
 						.attr("y", 0)
-						.attr("height", 483)
-						.attr("width", 736);
+						.attr("height", 956)
+						.attr("width", 606);
 
 
 
