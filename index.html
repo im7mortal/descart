@@ -63,6 +63,7 @@
 <button onclick="fasten(this.name)" name="graph">Зафиксировать график</button>
 <button onclick="new Point()">Добавить точку</button>
 <button onclick="rush()">RUSh</button>
+<button onclick="renderGraph()">Построить график</button>
 
 
 
@@ -83,6 +84,12 @@ var countMark = {
 };
 	var marks = {};
 	var points = {};
+
+	var ratio = {
+		"x": 1,
+		"y": 1
+	};
+
 	//Create SVG element
 	var svg = d3.select("body")
 			.append("svg")
@@ -184,7 +191,7 @@ var countMark = {
                 .attr("cy", cy)
                 .attr("r", 1.5)
                 .style({
-                    "stroke": "black"
+                    "stroke": "red"
                 });
 
         this.g.append("circle")
@@ -193,7 +200,7 @@ var countMark = {
                 .attr("cy", cy)
                 .attr("r", 20)
                 .style({
-                    "stroke": "black",
+                    "stroke": "red",
                     "opacity": 0
                 });
 
@@ -344,13 +351,35 @@ var countMark = {
 
 
 	Mark.prototype.calc = function () {
-		if ((this.value * this.quantity) < 0) {
-			this.resolveConflict (true, 'Масштаб не может быть отрицательным')
+
+		var conflictFlag, errorMessage;
+		d3.map(marks).values()
+				.sort(function (object1, object2) {
+					if (object1.quantity > object2.quantity) {
+						return 1;
+					} else {
+						return -1;
+					}
+				})
+				.forEach(function(object, i, array) {
+					if(!i || conflictFlag) return;
+					if(object.value < array[i - 1].value){
+						conflictFlag = true;
+					}
+				});
+
+		if (conflictFlag || (this.value * this.quantity) < 0) {
+			if (conflictFlag) {
+				errorMessage = 'Значения отметок должны быть последовательными';
+			} else {
+				errorMessage = 'Масштаб не может быть отрицательным';
+			}
+			this.resolveConflict (true, errorMessage)
 		} else {
 			this.resolveConflict (false)
 		}
-
-//		console.log(this.value / this.quantity);
+		ratio[this.axes] = this.value / this.quantity;
+		despatchCentr ()
 	};
 
 
@@ -363,10 +392,80 @@ var countMark = {
         this.calc();
 	};
 
+var range = {
+	'x': [],
+	'y': []
+};
+	function despatchCentr() {
+		range.x.length = 0;
+		range.y.length = 0;
+		d3.map(marks).values()
+				.sort(function (object1, object2) {
+					if (object1.x > object2.x) {
+						return 1;
+					} else {
+						return -1;
+					}
+				})
+				.forEach(function (o) {
+					var array = range[o.axes];
+					var length = array.length;
+					var ratio;
+					if (length !== 0) {
+						ratio = (o.value - array[length - 1].value) / (o.quantity - array[length - 1].quantity);
+					} else {
+						ratio = o.value / o.quantity;
+					}
+					range[o.axes].push({
+						"quantity": o.quantity,
+						"value": o.value,
+						"ratio": ratio
+					})
+				});
+		console.log(range);
+	}
+
+	function rationer(ob) {
+		var arrx = range.x.filter(function (o) {
+			if (ob.x < o.quantity) {
+				return 1;
+			} else {
+				return -1;
+			}
+		});
+		var ratiox;
+		if (arrx.length !== 0) {
+			ratiox = arrx[arrx.length - 1].ratio;
+		} else {
+			ratiox = range.x[range.x.length - 1].ratio;
+		}
+
+		var arry = range.y.filter(function (o) {
+			if (ob.y < o.quantity) {
+				return 1;
+			} else {
+				return -1;
+			}
+		});
+		var ratioy;
+		if (arry.length !== 0) {
+			ratioy = arry[arry.length - 1].ratio;
+		} else {
+			ratioy = range.y[range.y.length - 1].ratio;
+		}
+
+		return {
+			"x": ratiox * ob.x,
+			"y": ratioy * ob.y
+		}
+	}
+
+
+
+
 var path;
 function rush () {
     var data = getDataPath();
-console.log(data);
     var line = d3.svg.line()
             .x(function(d) { return d.x + centrWSVGdescart; })
             .y(function(d) { return centrHSVGdescart - d.y; });
@@ -399,13 +498,17 @@ console.log(data);
 				return -1;
 			}
 		})
-	}function getDataPath() {
+	}
+
+
+
+	function getDataPath() {
 		var data = buildDataPath();
 		var csv = "";
 		data.forEach(function(o) {
-			csv += o.x + ", " + o.y + "\n";
+			var b = rationer(o);
+			csv += b.x  + ", " + b.y + "\n";
 		});
-		console.log(csv);
 		return data
 	}
 
@@ -425,6 +528,13 @@ console.log(data);
 						"stroke-width": 1.5
 					});
 		}
+	}
+
+
+
+
+	function renderGraph() {
+
 	}
 
 
