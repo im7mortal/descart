@@ -3,6 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<title>D3: Vertical axis added</title>
+    <link href="css/bootstrap.css">
 	<script type="application/javascript" src="d3.v3.js"></script>
 	<script type="application/javascript" src="http://d3js.org/d3.v3.js"></script>
 	<script type="application/javascript" src="21.js"></script>
@@ -44,6 +45,26 @@
 <script src="fileAPI.js"></script>
 <script src="simplify.js"></script>
 
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-md-5">
+			<div class="row" id="tipX">Задайте начало отсчета по X</div>
+			<label>
+				Начало отсчета по оси X
+				<input type="text" id="originX"/>
+			</label>
+		</div>
+		<div class="col-md-5">
+			<div class="row" id="tipY">Задайте начало отсчета по Y</div>
+			<label>
+				Начало отсчета по оси Y
+				<input type="text" id="originY"/>
+			</label>
+		</div>
+	</div>
+</div>
+
+
 <form id="mark">
 	<p><b>Отметки:</b><br>
 </form>
@@ -57,13 +78,17 @@
 	<div id="images"><!-- предпросмотр --></div>
 </div>
 
-<button onclick="new Mark('x')">Добавить отметку X</button>
-<button onclick="new Mark('y')">Добавить отметку Y</button>
-<button onclick="fasten(this.name)" name="descart">Зафиксировать систему координат</button>
-<button onclick="fasten(this.name)" name="graph">Зафиксировать график</button>
-<button onclick="new Point()">Добавить точку</button>
-<button onclick="rush()">RUSh</button>
-<button onclick="renderGraph()">Построить график</button>
+
+<div class="btn-group" role="group" >
+    <button onclick="new Mark('x')">Добавить отметку X</button>
+    <button onclick="new Mark('y')">Добавить отметку Y</button>
+    <button onclick="fasten(this.name)" name="descart">Зафиксировать систему координат</button>
+    <button onclick="fasten(this.name)" name="graph">Зафиксировать график</button>
+    <button onclick="new Point()">Добавить точку</button>
+    <button onclick="rush()">RUSh</button>
+    <button onclick="renderGraph()">Построить график</button>
+</div>
+
 
 
 
@@ -82,13 +107,11 @@ var countMark = {
 	"x": 0,
 	"y": 0
 };
+
+//    var originX = 0;
 	var marks = {};
 	var points = {};
 
-	var ratio = {
-		"x": 1,
-		"y": 1
-	};
 
 	//Create SVG element
 	var svg = d3.select("body")
@@ -154,6 +177,14 @@ var countMark = {
 				"stroke": "black",
 				"stroke-width": 2
 			});
+
+//    var elementOrigin = document.getElementById('originX');
+//    elementOrigin.value = 0;
+//    elementOrigin.onchange = function() {
+//        originX = this.value;
+//    };
+
+
 
 	var marksGroup = descart.append("g")
 			.attr("id", "marksGroup");
@@ -242,61 +273,11 @@ var countMark = {
 				.append("input")
 				.attr("name", this.name)
 				.attr("type", "text")[0][0];
+
 		this.input.onchange = this.engine.bind(this);
-		this.g = descart.append("g")
-				.attr("id", this.name);
-		var x1, x2, y1, y2, cx, cy;
-		if (this.axes === 'x') {
-			this.x = 100;
-			this.y = 0;
-            this.quantity = this.x;
-            x1 = x2 = cx = centrWSVGdescart + 100;
-			y1 = centrHSVGdescart - 50;
-			y2 = centrHSVGdescart + 50;
-			cy = centrHSVGdescart;
-			this.g.classed("pointx", true)
-		} else {
-			this.x = 0;
-			this.y = -100;
-			this.quantity = this.y + 200;
-			x1 = centrWSVGdescart - 50;
-			x2 = centrWSVGdescart + 50;
-			cx = centrWSVGdescart;
-			y1 = y2 = cy =centrHSVGdescart - 100;
-			this.g.classed("pointy", true)
-		}
 
 
-		this.g.append("line")
-				.attr("x1", x1)
-				.attr("y1", y1)
-				.attr("x2", x2)
-				.attr("y2", y2)
-				.style({
-					"stroke": "red",
-					"stroke-width": 1
-				});
-		this.g.append("line")
-				.attr("id", "area")
-				.attr("x1", x1)
-				.attr("y1", y1)
-				.attr("x2", x2)
-				.attr("y2", y2)
-				.style({
-					"stroke": "red",
-					"opacity": 0,
-					"stroke-width": 30
-				});
 
-		this.centr = this.g.append("circle")
-				.attr("id", "zero")
-				.attr("cx", cx)
-				.attr("cy", cy)
-				.attr("r", 1)
-				.style({
-					"stroke": "black",
-					"stroke-width": 2
-				});
 
 	}
 
@@ -340,18 +321,94 @@ var countMark = {
 	};
 
 	Mark.prototype.engine = function () {
-		this.value = parseFloat(this.input.value);
-		if(!this.text) {
-			this.text = this.g.append("text");
+		var number = parseFloat(this.input.value);
+		var orig = origin[this.axes].value;
+		if (isFinite(number) && orig) {
+
+
+
+			this.value = number;
+			this.g = descart.append("g")
+							.attr("id", this.name);
+
+
+
+			var x1, x2, y1, y2, cx, cy;
 			if (this.axes === 'x') {
-				this.text.attr("x", centrWSVGdescart + 100)
-						.attr("y", centrHSVGdescart + 60)
+				this.x = 100;
+				this.y = 0;
+				this.quantity = this.x;
+				x1 = x2 = cx = centrWSVGdescart + 100;
+				y1 = centrHSVGdescart - 50;
+				y2 = centrHSVGdescart + 50;
+				cy = centrHSVGdescart;
+				this.g.classed("pointx", true)
 			} else {
-				this.text.attr("x", centrWSVGdescart - 65)
-						.attr("y", centrHSVGdescart - 105)
+				this.x = 0;
+				this.y = -100;
+				this.quantity = this.y + 200;
+				x1 = centrWSVGdescart - 50;
+				x2 = centrWSVGdescart + 50;
+				cx = centrWSVGdescart;
+				y1 = y2 = cy =centrHSVGdescart - 100;
+				this.g.classed("pointy", true)
 			}
+
+
+			this.g.append("line")
+					.attr("x1", x1)
+					.attr("y1", y1)
+					.attr("x2", x2)
+					.attr("y2", y2)
+					.style({
+						"stroke": "red",
+						"stroke-width": 1
+					});
+			this.g.append("line")
+					.attr("id", "area")
+					.attr("x1", x1)
+					.attr("y1", y1)
+					.attr("x2", x2)
+					.attr("y2", y2)
+					.style({
+						"stroke": "red",
+						"opacity": 0,
+						"stroke-width": 30
+					});
+
+			this.centr = this.g.append("circle")
+					.attr("id", "zero")
+					.attr("cx", cx)
+					.attr("cy", cy)
+					.attr("r", 1)
+					.style({
+						"stroke": "black",
+						"stroke-width": 2
+					});
+
+
+			if(!this.text) {
+				this.text = this.g.append("text");
+				if (this.axes === 'x') {
+					this.text.attr("x", centrWSVGdescart + 100)
+							.attr("y", centrHSVGdescart + 60)
+				} else {
+					this.text.attr("x", centrWSVGdescart - 65)
+							.attr("y", centrHSVGdescart - 105)
+				}
+			}
+			this.text.text(this.value);
+
+
+
+		} else {
+			this.value = null;
+			this.quantity = null;
+			this.g.remove();
+			this.g = null;
+			this.text.remove();
+			this.text = null;
 		}
-		this.text.text(this.value);
 		this.calc();
 	};
 
@@ -360,6 +417,9 @@ var countMark = {
 
 	Mark.prototype.calc = function () {
 
+
+		despatchCentr ();
+return;
 		var conflictFlag, errorMessage;
 		d3.map(marks).values()
 				.sort(function (object1, object2) {
@@ -386,8 +446,6 @@ var countMark = {
 		} else {
 			this.resolveConflict (false)
 		}
-		ratio[this.axes] = this.value / this.quantity;
-		despatchCentr ()
 	};
 
 
@@ -422,7 +480,7 @@ var range = {
 					if (length !== 0) {
 						ratio = (o.value - array[length - 1].value) / (o.quantity - array[length - 1].quantity);
 					} else {
-						ratio = o.value / o.quantity;
+						ratio = (o.value - +origin[o.axes].value) / o.quantity;
 					}
 					range[o.axes].push({
 						"quantity": o.quantity,
@@ -440,6 +498,7 @@ var range = {
 				return -1;
 			}
 		});
+//		console.log(arrx);
 		var ratiox;
 		if (arrx.length !== 0) {
 			ratiox = arrx[arrx.length - 1].ratio;
@@ -515,8 +574,13 @@ var globalData;
 		var csv = "";
 		data.forEach(function(o) {
 			var b = rationer(o);
-			csv += b.x  + ", " + b.y + "\n";
+			csv += b.x  + "; " + b.y + "\n";
 		});
+
+		while(csv.indexOf('.') + 1) {
+			csv = csv.replace('.', ',');
+		}
+        console.log(csv);
 		return data
 	}
 
@@ -712,7 +776,6 @@ console.log(data);
 	interact('.pointy')
 			.draggable({
 				// enable inertial throwing
-				inertia: true,
 				// keep the element within the area of it's parent
 				restrict: {
 					elementRect: { left: 0, right: 0, top: 1, bottom: 1 }
@@ -781,6 +844,8 @@ console.log(data);
 		});
 	});
 </script>
+<script src="step1.js"></script>
+
 
 </body>
 </html>

@@ -4671,17 +4671,17 @@
 		},
 
 		/*\
-		 * Interactable.origin
+		 * Interactable.originX
 		 [ method ]
 		 *
-		 * Gets or sets the origin of the Interactable's element.  The x and y
-		 * of the origin will be subtracted from action event coordinates.
+		 * Gets or sets the originX of the Interactable's element.  The x and y
+		 * of the originX will be subtracted from action event coordinates.
 		 *
-		 - origin (object | string) #optional An object eg. { x: 0, y: 0 } or string 'parent', 'self' or any CSS selector
+		 - originX (object | string) #optional An object eg. { x: 0, y: 0 } or string 'parent', 'self' or any CSS selector
 		 * OR
-		 - origin (Element) #optional An HTML or SVG Element whose rect will be used
+		 - originX (Element) #optional An HTML or SVG Element whose rect will be used
 		 **
-		 = (object) The current origin or this Interactable
+		 = (object) The current originX or this Interactable
 		 \*/
 		origin: function (newValue) {
 			if (trySelector(newValue)) {
@@ -4736,7 +4736,7 @@
 		 |     // the rect will be `interact.getElementRect(element.parentNode)`
 		 |     drag: element.parentNode,
 		 |
-		 |     // x and y are relative to the the interactable's origin
+		 |     // x and y are relative to the the interactable's originX
 		 |     resize: { x: 100, y: 100, width: 200, height: 200 }
 		 | })
 		 |
@@ -5150,7 +5150,7 @@
 
 			var settings = [
 				'accept', 'actionChecker', 'allowFrom', 'deltaSource',
-				'dropChecker', 'ignoreFrom', 'origin', 'preventDefault',
+				'dropChecker', 'ignoreFrom', 'originX', 'preventDefault',
 				'rectChecker'
 			];
 
