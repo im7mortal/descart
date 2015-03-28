@@ -262,11 +262,16 @@ var countMark = {
             this.y -= event.dy;
         this.calc();
     };
-
+var marksX = {};
+var marksY = {};
 
 	function Mark (axes) {
 		this.name = "mark_" + axes + countMark[axes]++;
-		marks[this.name] = this;
+		if (axes === 'x') {
+			marksX[this.name] = this;
+		} else {
+			marksY[this.name] = this;
+		}
 		var self = this;
 		this.axes = axes;
 		this.input = d3.select("#mark")
@@ -275,9 +280,6 @@ var countMark = {
 				.attr("type", "text")[0][0];
 
 		this.input.onchange = this.engine.bind(this);
-
-
-
 
 	}
 
@@ -327,7 +329,6 @@ var countMark = {
 
 
 
-			this.value = number;
 			this.value = number;
 			this.g = descart.append("g")
 							.attr("id", this.name);
@@ -502,29 +503,37 @@ var range = {
 		range.y = [];
 		var minX = Infinity;
 		var minY = Infinity;
-		var array = d3.map(marks).values();
-		array = array.sort(function (object1, object2) {
-					if (object1.x > object2.x) {
+		var arrayX = d3.map(marksX).values();
+		var arrayY = d3.map(marksY).values();
+
+		arrayX = arrayX.sort(function (object1, object2) {
+					if (object1.quantity > object2.quantity) {
 						return 1;
 					} else {
 						return -1;
 					}
 				});
-		array.forEach(function (o) {
-
-					if(o.axes === 'x') {
-						if (o.quantity < minX) minX = o.quantity;
-					}else {
-						if (o.quantity < minY) minY = o.quantity;
+		arrayY = arrayY.sort(function (object1, object2) {
+					if (object1.quantity > object2.quantity) {
+						return 1;
+					} else {
+						return -1;
 					}
-				});//
-		array.forEach(function (o) {
+				});
+		arrayX.forEach(function (o) {
+			if (o.quantity < minX) minX = o.quantity;
+				});
+		arrayY.forEach(function (o) {
+						if (o.quantity < minY) minY = o.quantity;
+				});
+
+		arrayX.forEach(function (o, i, arraye) {
 					var array = range[o.axes];
 					var length = array.length;
 					var quantity, value;
-					if (length !== 0) {
-						value = o.value - array[length - 1].value - +origin[o.axes].value;
-						quantity = o.quantity - array[length - 1].quantity;
+					if (i !== 0) {
+						value = o.value - arraye[i - 1].value;
+						quantity = o.quantity - arraye[i - 1].quantity;
 					} else {
 						value = o.value - +origin[o.axes].value;
 						quantity = o.quantity;
@@ -535,11 +544,36 @@ var range = {
 						"value": value,
 						"ratio": value / quantity
 					}
-					if(o.axes === 'x') {
-						if (o.quantity === minX) b.offset = +origin[o.axes].value;
-					}else {
-						if (o.quantity === minY) b.offset = +origin[o.axes].value;
+					if (o.quantity === minX) b.offset = +origin[o.axes].value;
+
+					console.log(b);
+
+					range[o.axes].push(b)
+				});
+
+		arrayY.forEach(function (o, i ,ar) {
+					var array = range[o.axes];
+					var length = array.length;
+					var quantity, value;
+//			console.log(ar);
+//			console.log(ar.length);
+//			console.log(i);
+					if (i !== 0) {
+//						console.log(ar[i - 1]);
+//						console.log( o);
+						value = o.value - ar[i - 1].value;
+						quantity = o.quantity - ar[i - 1].quantity;
+					} else {
+						value = o.value - +origin[o.axes].value;
+						quantity = o.quantity;
 					}
+					var b = {
+						"originalQuantity": o.quantity,
+						"quantity": quantity,
+						"value": value,
+						"ratio": value / quantity
+					}
+			if (o.quantity === minY) b.offset = +origin[o.axes].value;
 
 					console.log(b);
 
@@ -595,7 +629,6 @@ var range = {
 
 		var Y = 0;
 		var quantityY = 0;
-		console.log(range.y);
 		var arry = range.y.filter(function (o,i,a) {
 			if(!i) return true;
 
@@ -606,7 +639,7 @@ var range = {
 			}
 			return false;
 		});
-		console.log(arry);
+//		console.log(arry);
 		arry.forEach(function (object, i, array) {
 			var offset = object.offset?object.offset:0;
 			if(i === (array.length - 1)) {
@@ -615,7 +648,7 @@ var range = {
 				quantityY += object.quantity;
 				Y += object.quantity * object.ratio + offset;
 			}
-			console.log(Y);
+//			console.log(Y);
 		});
 
 		/*var ratiox, offsetX;
@@ -755,8 +788,7 @@ var svgGraph;
 				.orient("left");
 
 		var line = d3.svg.line()
-				.x(function(d) { console.log(d)
-					return d.x; })
+				.x(function(d) { return d.x; })
 				.y(function(d) { return d.y; });
 
 		var svg = d3.select("body").append("svg")
@@ -879,7 +911,7 @@ console.log(data);
 					target.style.webkitTransform =
 							target.style.transform =
 									'translate(' + x + 'px, ' + y + 'px)';
-                    marks[event.target.id].eng(event);
+					marksX[event.target.id].eng(event);
 
 					// update the posiion attributes
 					target.setAttribute('data-x', x);
@@ -914,7 +946,7 @@ console.log(data);
 					target.style.webkitTransform =
 							target.style.transform =
 									'translate(' + x + 'px, ' + y + 'px)';
-                    marks[event.target.id].eng(event);
+					marksY[event.target.id].eng(event);
 
 					// update the posiion attributes
 					target.setAttribute('data-x', x);
