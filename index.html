@@ -328,12 +328,13 @@ var countMark = {
 
 
 			this.value = number;
+			this.value = number;
 			this.g = descart.append("g")
 							.attr("id", this.name);
 
 
 
-			var x1, x2, y1, y2, cx, cy;
+			var x1, x2, y1, y2, cx, cy, inf1, inf2;
 			if (this.axes === 'x') {
 				this.x = 100;
 				this.y = 0;
@@ -342,6 +343,19 @@ var countMark = {
 				y1 = centrHSVGdescart - 50;
 				y2 = centrHSVGdescart + 50;
 				cy = centrHSVGdescart;
+				inf1 = centrHSVGdescart + 2000;
+				inf2 = centrHSVGdescart - 2000;
+
+				this.g.append("line")
+						.attr("x1", centrWSVGdescart + 100)
+						.attr("y1", centrHSVGdescart + 2000)
+						.attr("x2", centrWSVGdescart + 100)
+						.attr("y2", centrHSVGdescart - 2000)
+						.style({
+							"stroke": "red",
+							"opacity": 0.5,
+							"stroke-width": 0.5
+						});
 				this.g.classed("pointx", true)
 			} else {
 				this.x = 0;
@@ -351,9 +365,30 @@ var countMark = {
 				x2 = centrWSVGdescart + 50;
 				cx = centrWSVGdescart;
 				y1 = y2 = cy =centrHSVGdescart - 100;
+				this.g.append("line")
+						.attr("x1", centrWSVGdescart - 2000)
+						.attr("y1", centrHSVGdescart - 100)
+						.attr("x2", centrWSVGdescart + 2000)
+						.attr("y2", centrHSVGdescart - 100)
+						.style({
+							"stroke": "red",
+							"opacity": 0.5,
+							"stroke-width": 0.7
+						});
+
 				this.g.classed("pointy", true)
 			}
 
+
+			this.g.append("line")
+					.attr("x1", x1)
+					.attr("y1", y1)
+					.attr("x2", x2)
+					.attr("y2", y2)
+					.style({
+						"stroke": "red",
+						"stroke-width": 1
+					});
 
 			this.g.append("line")
 					.attr("x1", x1)
@@ -463,70 +498,158 @@ var range = {
 	'y': []
 };
 	function despatchCentr() {
-		range.x.length = 0;
-		range.y.length = 0;
-		d3.map(marks).values()
-				.sort(function (object1, object2) {
+		range.x = [];
+		range.y = [];
+		var minX = Infinity;
+		var minY = Infinity;
+		var array = d3.map(marks).values();
+		array = array.sort(function (object1, object2) {
 					if (object1.x > object2.x) {
 						return 1;
 					} else {
 						return -1;
 					}
-				})
-				.forEach(function (o) {
+				});
+		array.forEach(function (o) {
+
+					if(o.axes === 'x') {
+						if (o.quantity < minX) minX = o.quantity;
+					}else {
+						if (o.quantity < minY) minY = o.quantity;
+					}
+				});
+		array.forEach(function (o) {
 					var array = range[o.axes];
 					var length = array.length;
-					var ratio;
+					var quantity, value;
 					if (length !== 0) {
-						ratio = (o.value - array[length - 1].value) / (o.quantity - array[length - 1].quantity);
+						value = o.value - array[length - 1].value - +origin[o.axes].value;
+						quantity = o.quantity - array[length - 1].quantity;
 					} else {
-						ratio = (o.value - +origin[o.axes].value) / o.quantity;
+						value = o.value - +origin[o.axes].value;
+						quantity = o.quantity;
 					}
-					range[o.axes].push({
-						"quantity": o.quantity,
-						"value": o.value,
-						"ratio": ratio
-					})
-				});
-	}
+					var b = {
+						"originalQuantity": o.quantity,
+						"quantity": quantity,
+						"value": value,
+						"ratio": value / quantity
+					}
+					if(o.axes === 'x') {
+						if (o.quantity === minX) b.offset = +origin[o.axes].value;
+					}else {
+						if (o.quantity === minY) b.offset = +origin[o.axes].value;
+					}
 
-	function rationer(ob) {
-		var arrx = range.x.filter(function (o) {
-			if (ob.x < o.quantity) {
+					console.log(b);
+
+					range[o.axes].push(b)
+				});
+
+
+
+		range.x = range.x.sort(function (object1, object2) {
+			if (object1.x > object2.x) {
 				return 1;
 			} else {
 				return -1;
 			}
 		});
-//		console.log(arrx);
-		var ratiox;
+//		console.log(range.x);
+
+		range.y = range.y.sort(function (object1, object2) {
+			if (object1.y > object2.y) {
+				return 1;
+			} else {
+				return -1;
+			}
+		})
+//		console.log(range.x);
+
+	}
+
+	function rationer(ob, i) {
+
+
+		var X = 0;
+		var quantityX = 0;
+		var arrx = range.x.filter(function (o,i,a) {
+			if(!i) return true;
+
+			if(ob.x > o.originalQuantity) {
+				return true;
+			} else if (ob.x > a[i - 1].originalQuantity) {
+				return true;
+			}
+			return false;
+		});
+		arrx.forEach(function (object, i, array) {
+			var offset = object.offset?object.offset:0;
+			if(i === (array.length - 1)) {
+				X += (ob.x - quantityX) * object.ratio + offset;
+			} else {
+				quantityX += object.quantity;
+				X += object.quantity * object.ratio + offset;
+			}
+		});
+
+		var Y = 0;
+		var quantityY = 0;
+		console.log(range.y);
+		var arry = range.y.filter(function (o,i,a) {
+			if(!i) return true;
+
+			if(ob.y > o.originalQuantity) {
+				return true;
+			} else if (ob.y > a[i - 1].originalQuantity) {
+				return true;
+			}
+			return false;
+		});
+		console.log(arry);
+		arry.forEach(function (object, i, array) {
+			var offset = object.offset?object.offset:0;
+			if(i === (array.length - 1)) {
+				Y += (ob.y - quantityY) * object.ratio + offset;
+			} else {
+				quantityY += object.quantity;
+				Y += object.quantity * object.ratio + offset;
+			}
+			console.log(Y);
+		});
+
+		/*var ratiox, offsetX;
 		if (arrx.length !== 0) {
-			ratiox = arrx[arrx.length - 1].ratio;
+			ratiox = arrx[0].ratio;
+			offsetX = arrx[0].offset;
 		} else {
 			ratiox = range.x[range.x.length - 1].ratio;
+			offsetX = range.x[range.x.length - 1].offset;
 		}
 
+		offsetX = offsetX?offsetX:0;
 		var arry = range.y.filter(function (o) {
-			if (ob.y < o.quantity) {
-				return 1;
-			} else {
-				return -1;
-			}
+			return ob.y < o.quantity;
 		});
-		var ratioy;
+		var ratioy, offsetY;
 		if (arry.length !== 0) {
-			ratioy = arry[arry.length - 1].ratio;
+			ratioy = arry[0].ratio;
+			offsetY = arry[0].offset;
 		} else {
 			ratioy = range.y[range.y.length - 1].ratio;
+			offsetY = range.y[range.y.length - 1].offset;
+		}
+		offsetY = offsetY?offsetY:0;*/
+		return {
+			"x": X,
+			"y": Y
 		}
 
-		return {
-			"x": ratiox * ob.x,
-			"y": ratioy * ob.y
-		}
 	}
 
+	function getCoordinates () {
 
+	}
 
 
 var path;
@@ -572,8 +695,8 @@ var globalData;
 		var data = buildDataPath();
 		globalData = data;
 		var csv = "";
-		data.forEach(function(o) {
-			var b = rationer(o);
+		data.forEach(function(o, i) {
+			var b = rationer(o, i);
 			csv += b.x  + "; " + b.y + "\n";
 		});
 
