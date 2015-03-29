@@ -237,14 +237,6 @@ var countMark = {
 
     }
 
-	function converter (array) {
-		return array.map(function(d) {
-			return {
-				'x': d.x + centrWSVGdescart,
-				"y": centrHSVGdescart - d.y
-			}
-		})
-	}
 
     Point.prototype.calc = function () {
         /*if ((this.value * this.quantity) < 0) {
@@ -730,13 +722,14 @@ var globalData;
 		var csv = "";
 		data.forEach(function(o, i) {
 			var b = rationer(o, i);
-			csv += b.x  + "; " + b.y + "\n";
+			csv += b.x  + "; " + b.y + "<br>";
 		});
 
 		while(csv.indexOf('.') + 1) {
 			csv = csv.replace('.', ',');
 		}
         console.log(csv);
+		document.getElementById('csv').innerHTML = csv;
 		return data
 	}
 
@@ -789,8 +782,15 @@ var svgGraph;
 
 		var line = d3.svg.line()
 				.x(function(d) { return d.x; })
-				.y(function(d) { return d.y; });
-
+				.y(function(d) { return 130 - d.y; });
+		function converter (array) {
+			return array.map(function(d) {
+				return {
+					'x': d.x,
+					"y": d.y
+				}
+			})
+		}
 		var svg = d3.select("body").append("svg")
 				.attr("width", width + margin.left + margin.right)
 				.attr("height", height + margin.top + margin.bottom)
@@ -1001,6 +1001,6 @@ console.log(data);
 </script>
 <script src="step1.js"></script>
 
-
+<div id="csv"></div>
 </body>
 </html>
