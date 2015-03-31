@@ -897,63 +897,31 @@ interact('.pointy')
 //	zoom(descart);
 //	zoom.scale([0.5, 0.5])
 
-document.getElementById("fileInput")
-	.addEventListener("change", function() {
+var fileInput = document.getElementById("fileInput");
+fileInput.addEventListener("change", function () {
 	if (this.files.length) {
-		console.log(this.files);
-/*		var reader = new FileReader();
-
-		reader.onload = function(e) {
-			var img = document.createElement('img');
-
-			img.onload = function() {
-				console.log(this.width+'x'+this.height); // наконец-то результат
-			};
-
-			img.src = e.target.result;
-		};
-
-		reader.readAsDataURL(this.files[0])*/
 		graph = svg.insert("image", 'g#descart')
 			.classed("descart", true)
 			.attr("xlink:href", this.files[0].name)
 			.attr("x", 0)
-			.attr("y", 0)
-			.attr("height", 956)
-			.attr("width", 606)
+			.attr("y", 0);
+		if (FileReader) {
+			var reader = new FileReader();
+			reader.onloadend = function () {
+				var img = document.createElement('img');
+				img.onload = function () {
+					graph.attr("width", this.width)
+						.attr("height", this.height);
+				};
+				img.src = reader.result;
+			};
+			reader.readAsDataURL(this.files[0]);
+		} else {
+			graph.attr("height", 956)
+				.attr("width", 606);
+		}
 	}
 });
-
-
-
-
-
-
-/*FileAPI.event.on(choose, 'change', function (evt){
-	var files = FileAPI.getFiles(evt); // Retrieve file list
-
-	FileAPI.filterFiles(files, function (file, info*//**Object*//*){
-		if( /^image/.test(file.type) ){
-			return  info.width >= 320 && info.height >= 240;
-		}
-		return  false;
-	}, function (files*//**Array*//*, rejected*//**Array*//*){
-		if( files.length ){
-
-			graph = svg.insert("image", 'g#descart')
-				.classed("descart", true)
-				.attr("xlink:href", files[0].name)
-				.attr("x", 0)
-				.attr("y", 0)
-				.attr("height", 956)
-				.attr("width", 606);
-
-
-
-			// Загружаем файлы
-		}
-	});
-});*/
 
 
 
