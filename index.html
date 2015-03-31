@@ -82,6 +82,7 @@
     <button onclick="rush()">RUSh</button>
     <button onclick="renderGraph()">Построить график</button>
     <button onclick="increaseCanvas()">Увеличить область построения</button>
+    <button onclick="test()">TEST</button>
 </div>
 
 <script src="js/js.js"></script>
@@ -100,5 +101,23 @@
 	}
 
 </style>
+
+<script>
+function test() {
+	origin.x.originXInput.value = 50;
+	origin.y.originYInput.value = 50;
+	origin.x.originXInput.onchange();
+	origin.y.originYInput.onchange();
+	var x1 = new Mark('x');
+	x1.input.value = 100;
+	x1.input.onchange();
+	var y1 = new Mark('y');
+	y1.input.value = 100;
+	y1.input.onchange();
+
+}
+</script>
+
+
 </body>
 </html>

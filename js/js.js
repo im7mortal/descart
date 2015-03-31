@@ -174,6 +174,9 @@ Point.prototype.eng = function (event) {
 	this.y -= event.dy;
 	this.calc();
 };
+
+
+
 var marksX = {};
 var marksY = {};
 
@@ -365,8 +368,14 @@ Mark.prototype.engine = function () {
 
 Mark.prototype.calc = function () {
 
+	range = {
+		'x': [],
+		'y': []
+	};
+	fillRange(prepareArray(d3.map(marksX).values()));
+	fillRange(prepareArray(d3.map(marksY).values()));
 
-	despatchCentr ();
+
 	return;
 	var conflictFlag, errorMessage;
 	d3.map(marks).values()
@@ -398,121 +407,53 @@ Mark.prototype.calc = function () {
 
 
 Mark.prototype.eng = function (event) {
-	if (this.axes === 'x') {
-		this.quantity += event.dx;
-	} else {
-		this.quantity -= event.dy;
-	}
+	this.quantity += event['d' + this.axes];
 	this.calc();
 };
 
-var range = {
-	'x': [],
-	'y': []
-};
-function despatchCentr() {
-	range.x = [];
-	range.y = [];
-	var minX = Infinity;
-	var minY = Infinity;
-	var arrayX = d3.map(marksX).values();
-	var arrayY = d3.map(marksY).values();
+var range;
 
-	arrayX = arrayX.sort(function (object1, object2) {
+
+
+var prepareArray = function (array) {
+	return array.sort(function (object1, object2) {
 		if (object1.quantity > object2.quantity) {
-			return 1;
-		} else {
-			return -1;
-		}
-	});
-	arrayY = arrayY.sort(function (object1, object2) {
-		if (object1.quantity > object2.quantity) {
-			return 1;
-		} else {
-			return -1;
-		}
-	});
-	arrayX.forEach(function (o) {
-		if (o.quantity < minX) minX = o.quantity;
-	});
-	arrayY.forEach(function (o) {
-		if (o.quantity < minY) minY = o.quantity;
-	});
-
-	arrayX.forEach(function (o, i, arraye) {
-		var array = range[o.axes];
-		var length = array.length;
-		var quantity, value;
-		if (i !== 0) {
-			value = o.value - arraye[i - 1].value;
-			quantity = o.quantity - arraye[i - 1].quantity;
-		} else {
-			value = o.value - +origin[o.axes].value;
-			quantity = o.quantity;
-		}
-		var b = {
-			"originalQuantity": o.quantity,
-			"quantity": quantity,
-			"value": value,
-			"ratio": value / quantity
-		}
-		if (o.quantity === minX) b.offset = +origin[o.axes].value;
-
-		console.log(b);
-
-		range[o.axes].push(b)
-	});
-
-	arrayY.forEach(function (o, i ,ar) {
-		var array = range[o.axes];
-		var length = array.length;
-		var quantity, value;
-//			console.log(ar);
-//			console.log(ar.length);
-//			console.log(i);
-		if (i !== 0) {
-//						console.log(ar[i - 1]);
-//						console.log( o);
-			value = o.value - ar[i - 1].value;
-			quantity = o.quantity - ar[i - 1].quantity;
-		} else {
-			value = o.value - +origin[o.axes].value;
-			quantity = o.quantity;
-		}
-		var b = {
-			"originalQuantity": o.quantity,
-			"quantity": quantity,
-			"value": value,
-			"ratio": value / quantity
-		}
-		if (o.quantity === minY) b.offset = +origin[o.axes].value;
-
-		console.log(b);
-
-		range[o.axes].push(b)
-	});
-
-
-
-	range.x = range.x.sort(function (object1, object2) {
-		if (object1.x > object2.x) {
-			return 1;
-		} else {
-			return -1;
-		}
-	});
-//		console.log(range.x);
-
-	range.y = range.y.sort(function (object1, object2) {
-		if (object1.y > object2.y) {
 			return 1;
 		} else {
 			return -1;
 		}
 	})
-//		console.log(range.x);
+};
+var minElementArray = function (array) {
+	var minElement = Infinity;
+	array.forEach(function (o) {
+		if (o.quantity < minElement) minElement = o.quantity;
+	});
+	return minElement;
+};
 
-}
+var fillRange = function (array) {
+	var minElement = minElementArray(array);
+	array.forEach(function (mark, index, currentArray) {
+		var quantity, value;
+		if (index !== 0) {
+			value = mark.value - currentArray[index - 1].value;
+			quantity = mark.quantity - currentArray[index - 1].quantity;
+		} else {
+			value = mark.value - +origin[mark.axes].value;
+			quantity = mark.quantity;
+		}
+		var object = {
+			"originalQuantity": mark.quantity,
+			"quantity": quantity,
+			"value": value,
+			"ratio": value / quantity
+		};
+		if (mark.quantity === minElement) object.offset = +origin[mark.axes].value;
+		range[mark.axes].push(object)
+	})
+};
+
 
 function rationer(ob, i) {
 
@@ -554,37 +495,20 @@ function rationer(ob, i) {
 //		console.log(arry);
 	arry.forEach(function (object, i, array) {
 		var offset = object.offset?object.offset:0;
+		console.log(Y);
 		if(i === (array.length - 1)) {
 			Y += (ob.y - quantityY) * object.ratio + offset;
 		} else {
 			quantityY += object.quantity;
 			Y += object.quantity * object.ratio + offset;
 		}
-//			console.log(Y);
+
 	});
 
-	/*var ratiox, offsetX;
-	 if (arrx.length !== 0) {
-	 ratiox = arrx[0].ratio;
-	 offsetX = arrx[0].offset;
-	 } else {
-	 ratiox = range.x[range.x.length - 1].ratio;
-	 offsetX = range.x[range.x.length - 1].offset;
-	 }
-
-	 offsetX = offsetX?offsetX:0;
-	 var arry = range.y.filter(function (o) {
-	 return ob.y < o.quantity;
-	 });
-	 var ratioy, offsetY;
-	 if (arry.length !== 0) {
-	 ratioy = arry[0].ratio;
-	 offsetY = arry[0].offset;
-	 } else {
-	 ratioy = range.y[range.y.length - 1].ratio;
-	 offsetY = range.y[range.y.length - 1].offset;
-	 }
-	 offsetY = offsetY?offsetY:0;*/
+	//console.log({
+	//	"x": X,
+	//	"y": Y
+	//});
 	return {
 		"x": X,
 		"y": Y
@@ -648,7 +572,7 @@ function getDataPath() {
 	while(csv.indexOf('.') + 1) {
 		csv = csv.replace('.', ',');
 	}
-	console.log(csv);
+	//console.log(csv);
 	document.getElementById('csv').innerHTML = csv;
 	return data
 }
@@ -866,7 +790,7 @@ interact('.pointy')
 				if(f.originalQuantity === marksY[event.target.id].quantity) obf = f;
 			});
 
-			if(obf.quantity + event.dy < 20) return;
+			//if(obf.quantity + event.dy < 20) return;
 			// keep the dragged position in the data-x/data-y attributes
 			var x = 0,
 				y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
