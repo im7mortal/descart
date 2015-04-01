@@ -37,8 +37,14 @@ function increaseCanvas () {
 
 
 var zoom = d3.behavior.zoom()
-	.scaleExtent([0, 100])
+	.scaleExtent([0.5, 100])
 	.on("zoom", zoomed);
+
+var drag = d3.behavior.drag()
+	.origin(function(d) { return d; })
+	.on("dragstart", dragstarted)
+	.on("drag", dragged)
+	.on("dragend", dragended);
 
 var svg = d3.select("body")
 	.append("svg")
@@ -52,6 +58,18 @@ var descart = svg.append("g")
 
 function zoomed() {
 	descart.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+}
+function dragstarted(d) {
+	d3.event.sourceEvent.stopPropagation();
+	d3.select(this).classed("dragging", true);
+}
+
+function dragged(d) {
+	d3.select(this).attr("cx", d.x = d3.event.x).attr("cy", d.y = d3.event.y);
+}
+
+function dragended(d) {
+	d3.select(this).classed("dragging", false);
 }
 
 descart.append("line")
@@ -694,7 +712,7 @@ function renderGraph() {
 
 
 
-
+/*
 interact('.descart')
 	.draggable({
 		inertia: true,
@@ -826,7 +844,7 @@ interact('.pointy')
 function lol (id) {
 	console.log();
 
-}
+}*/
 
 
 
