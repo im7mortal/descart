@@ -407,7 +407,11 @@ Mark.prototype.calc = function () {
 
 
 Mark.prototype.eng = function (event) {
-	this.quantity += event['d' + this.axes];
+	if (this.axes === 'x') {
+		this.quantity += event.dx;
+	} else {
+		this.quantity -= event.dy;
+	}
 	this.calc();
 };
 
@@ -495,7 +499,6 @@ function rationer(ob, i) {
 //		console.log(arry);
 	arry.forEach(function (object, i, array) {
 		var offset = object.offset?object.offset:0;
-		console.log(Y);
 		if(i === (array.length - 1)) {
 			Y += (ob.y - quantityY) * object.ratio + offset;
 		} else {
@@ -505,10 +508,10 @@ function rationer(ob, i) {
 
 	});
 
-	//console.log({
-	//	"x": X,
-	//	"y": Y
-	//});
+	console.log({
+		"x": X,
+		"y": Y
+	});
 	return {
 		"x": X,
 		"y": Y
@@ -782,17 +785,9 @@ interact('.pointy')
 
 		// call this function on every dragmove event
 		onmove: function (event) {
-			var target = event.target;
-			var ttt = marksY[event.target.id];
-			var range1 = range['y'];
-			var obf;
-			range1.forEach(function (f) {
-				if(f.originalQuantity === marksY[event.target.id].quantity) obf = f;
-			});
-
-			//if(obf.quantity + event.dy < 20) return;
+			var target = event.target,
 			// keep the dragged position in the data-x/data-y attributes
-			var x = 0,
+				x = 0,
 				y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
 			// translate the element
 			target.style.webkitTransform =
