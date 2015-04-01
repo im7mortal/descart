@@ -25,24 +25,34 @@ var points = {};
 
 
 //Create SVG element
-var svg = d3.select("body")
-	.append("svg")
-	.attr("width", widthSVGdescart)
-	.attr("height", heightSVGdescart);
+
+
+
+
+
 
 function increaseCanvas () {
 	svg.attr("height", parseInt(svg.attr("height")) + 100)
 }
 
-var zoom =  d3.behavior.zoom();
 
+var zoom = d3.behavior.zoom()
+	.scaleExtent([0, 100])
+	.on("zoom", zoomed);
 
+var svg = d3.select("body")
+	.append("svg")
+	.attr("width", widthSVGdescart)
+	.attr("height", heightSVGdescart)
+	.call(zoom);
 
 var descart = svg.append("g")
 	.attr("id", "descart")
 	.classed("descart", true);
 
-
+function zoomed() {
+	descart.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+}
 
 descart.append("line")
 	.attr("id", "axisY")
@@ -447,8 +457,10 @@ var fillRange = function (array) {
 			value = mark.value - +origin[mark.axes].value;
 			quantity = mark.quantity;
 		}
+		mark.dQuantity = quantity;
 		var object = {
 			"originalQuantity": mark.quantity,
+			"originalValue": mark.value,
 			"quantity": quantity,
 			"value": value,
 			"ratio": value / quantity
@@ -777,18 +789,20 @@ interact('.pointx')
 
 interact('.pointy')
 	.draggable({
-		// enable inertial throwing
-		// keep the element within the area of it's parent
-		restrict: {
-			elementRect: { left: 0, right: 0, top: 1, bottom: 1 }
-		},
-
-		// call this function on every dragmove event
 		onmove: function (event) {
 			var target = event.target,
-			// keep the dragged position in the data-x/data-y attributes
 				x = 0,
 				y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
+
+			if (marksY[id].dQuantity < 20) {
+
+			} else {
+
+			}
+
+
+			//lol (target.id);
+
 			// translate the element
 			target.style.webkitTransform =
 				target.style.transform =
@@ -809,7 +823,10 @@ interact('.pointy')
 		}
 
 	});
+function lol (id) {
+	console.log();
 
+}
 
 
 
@@ -841,35 +858,3 @@ fileInput.addEventListener("change", function () {
 		}
 	}
 });
-
-
-
-
-
-var width = 240,
-	height = 125,
-	radius = 20;
-
-var drag = d3.behavior.drag()
-	.origin(function(d) { return d; })
-	.on("drag", dragmove);
-
-var svgw = d3.select("body").append("div").selectAll("svg")
-	.data(d3.range(16).map(function() { return {x: width / 2, y: height / 2}; }))
-	.enter().append("svg")
-	.attr("width", width)
-	.attr("height", height);
-
-svgw.append("circle")
-	.attr("r", radius)
-	.attr("cx", function(d) { return d.x; })
-	.attr("cy", function(d) { return d.y; })
-	.call(drag);
-
-function dragmove(d) {
-	console.log(d);
-	d3.select(this)
-		.attr("cx", d.x = Math.max(radius, Math.min(width - radius, d3.event.x)))
-		.attr("cy", d.y = Math.max(radius, Math.min(height - radius, d3.event.y)));
-}
-
