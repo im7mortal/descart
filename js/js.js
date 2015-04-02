@@ -23,6 +23,8 @@ var countMark = {
 var marks = {};
 var points = {};
 
+var marksYarr = [];
+var marksXarr = [];
 
 //Create SVG element
 var svg = d3.select("body")
@@ -372,8 +374,10 @@ Mark.prototype.calc = function () {
 		'x': [],
 		'y': []
 	};
-	fillRange(prepareArray(d3.map(marksX).values()));
-	fillRange(prepareArray(d3.map(marksY).values()));
+	marksXarr = prepareArray(d3.map(marksX).values());
+	marksYarr = prepareArray(d3.map(marksY).values());
+	fillRange(marksXarr);
+	fillRange(marksYarr);
 
 
 	return;
@@ -453,6 +457,7 @@ var fillRange = function (array) {
 			"value": value,
 			"ratio": value / quantity
 		};
+		mark.dQuantity = quantity;
 		if (mark.quantity === minElement) object.offset = +origin[mark.axes].value;
 		range[mark.axes].push(object)
 	})
@@ -775,6 +780,38 @@ interact('.pointx')
 
 	});
 
+
+function sign (value) {
+	if (value > 0) {
+		return(1)
+	} else if (value < 0) {
+		return(-1)
+	} else {
+		return(0)
+	}
+}
+
+
+function accelerator (arr, event) {
+	arr.forEach(function(object, i, array) {
+		if(object.name === event.target.id) {
+			if (event.dy < 0) {
+				if (i !== array.length - 1) {
+					if (array[i + 1].dQuantity + event.dy <= 15) {
+						event.dy = 0;
+					}
+				}
+			} else {
+				console.log(object.dQuantity + event.dy);
+				if (object.dQuantity + event.dy  <= 15) {
+					event.dy = 0;
+				}
+			}
+		}
+	})
+}
+
+
 interact('.pointy')
 	.draggable({
 		// enable inertial throwing
@@ -785,9 +822,13 @@ interact('.pointy')
 
 		// call this function on every dragmove event
 		onmove: function (event) {
-			var target = event.target,
+			var target = event.target;
 			// keep the dragged position in the data-x/data-y attributes
-				x = 0,
+			event.dy = 1 * sign(event.dy);
+			if (event.dy === 0) return;
+			accelerator(marksYarr, event);
+
+			var x = 0,
 				y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
 			// translate the element
 			target.style.webkitTransform =
