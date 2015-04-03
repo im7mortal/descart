@@ -33,20 +33,7 @@ function Point () {
 
 }
 
-
-Point.prototype.calc = function () {
-	/*if ((this.value * this.quantity) < 0) {
-	 this.resolveConflict (true, 'Масштаб не может быть отрицательным')
-	 } else {
-	 this.resolveConflict (false)
-	 }*/
-
-//		console.log(this.value / this.quantity);
-};
-
-
 Point.prototype.eng = function (event) {
 	this.x += event.dx;
 	this.y -= event.dy;
-	this.calc();
 };
