@@ -245,7 +245,6 @@ Mark.prototype.engine = function () {
 	if (isFinite(number) && orig) {
 
 
-
 		this.value = number;
 		this.g = descart.append("g")
 			.attr("id", this.name);
@@ -276,14 +275,45 @@ Mark.prototype.engine = function () {
 				});
 			this.g.classed("pointx", true)
 		} else {
+			var marksYarr1 = d3.map(marksY).values()
+				.sort(function (object1, object2) {
+				if (object1.value > object2.value) {
+					return 1;
+				} else {
+					return -1;
+				}
+			});
 			this.x = 0;
 			this.y = -100;
-			this.quantity = this.y + 200;
+			if (marksYarr1.length > 1) {
+				marksYarr1.forEach(function(mark, index, currentArray) {
+					if (mark.value === number) {
+						if (index === currentArray.length - 1) {
+
+							cy = centrHSVGdescart - currentArray[index - 1].quantity - 50;
+							mark.quantity = currentArray[index - 1].quantity + 50;
+
+						} else {
+							console.log(centrHSVGdescart, currentArray[index + 1].quantity);
+							cy = centrHSVGdescart - currentArray[index + 1].quantity + 50;
+							mark.quantity = currentArray[index + 1].quantity - 50;
+							console.log(cy);
+						}
+					}
+				});
+			} else {
+				cy =centrHSVGdescart - 100;
+				this.quantity = this.y + 200;
+			}
+
+
+
+			console.log(this.quantity);
 			x1 = centrWSVGdescart - 50;
 			x2 = centrWSVGdescart + 50;
 			cx = centrWSVGdescart;
-			y1 = y2 = cy =centrHSVGdescart - 100;
-			this.g.append("line")
+			y1 = y2 = cy;
+/*			this.g.append("line")
 				.attr("x1", centrWSVGdescart - 2000)
 				.attr("y1", centrHSVGdescart - 100)
 				.attr("x2", centrWSVGdescart + 2000)
@@ -292,7 +322,7 @@ Mark.prototype.engine = function () {
 					"stroke": "red",
 					"opacity": 0.5,
 					"stroke-width": 0.7
-				});
+				});*/
 
 			this.g.classed("pointy", true)
 		}
@@ -343,7 +373,7 @@ Mark.prototype.engine = function () {
 		if(!this.text) {
 			this.text = this.g.append("text");
 			if (this.axes === 'x') {
-				this.text.attr("x", centrWSVGdescart + 100)
+				this.text.attr("x", centrWSVGdescart + cy)
 					.attr("y", centrHSVGdescart + 60)
 			} else {
 				this.text.attr("x", centrWSVGdescart - 65)
