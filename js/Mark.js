@@ -264,3 +264,55 @@ Mark.prototype.eng = function (event) {
 	}
 	this.calc();
 };
+
+
+
+
+var marksX = {};
+var marksY = {};
+
+
+var range;
+
+
+
+var prepareArray = function (array) {
+	return array.sort(function (object1, object2) {
+		if (object1.value > object2.value) {
+			return 1;
+		} else {
+			return -1;
+		}
+	})
+};
+var minElementArray = function (array) {
+	var minElement = Infinity;
+	array.forEach(function (o) {
+		if (o.quantity < minElement) minElement = o.quantity;
+	});
+	return minElement;
+};
+
+var fillRange = function (array) {
+	var minElement = minElementArray(array);
+	array.forEach(function (mark, index, currentArray) {
+		var quantity, value;
+		if (index !== 0) {
+			value = mark.value - currentArray[index - 1].value;
+			quantity = mark.quantity - currentArray[index - 1].quantity;
+		} else {
+			value = mark.value - +origin[mark.axes].value;
+			quantity = mark.quantity;
+		}
+		var object = {
+			"originalQuantity": mark.quantity,
+			"quantity": quantity,
+			"value": value,
+			"ratio": value / quantity
+		};
+		mark.dQuantity = quantity;
+		if (mark.quantity === minElement) object.offset = +origin[mark.axes].value;
+		range[mark.axes].push(object)
+	})
+};
+

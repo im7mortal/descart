@@ -36,4 +36,64 @@ function Point () {
 Point.prototype.eng = function (event) {
 	this.x += event.dx;
 	this.y -= event.dy;
+	this.rationer()
+};
+
+Point.prototype.rationer = function () {
+	var X = 0;
+	var quantityX = 0;
+
+	var arrx = range.x.filter(function (o,i,a) {
+		if(!i) return true;
+		if(this.x > o.originalQuantity) {
+			return true;
+		} else if (this.x > a[i - 1].originalQuantity) {
+			return true;
+		}
+		return false;
+	}, this);
+	arrx.forEach(function (object, i, array) {
+		var offset = object.offset?object.offset:0;
+		if(i === (array.length - 1)) {
+			X += (this.x - quantityX) * object.ratio + offset;
+		} else {
+			quantityX += object.quantity;
+			X += object.quantity * object.ratio + offset;
+		}
+	}, this);
+
+	var Y = 0;
+	var quantityY = 0;
+	var arry = range.y.filter(function (o,i,a) {
+		if(!i) return true;
+
+		if(this.y > o.originalQuantity) {
+			return true;
+		} else if (this.y > a[i - 1].originalQuantity) {
+			return true;
+		}
+		return false;
+	}, this);
+	arry.forEach(function (object, i, array) {
+		var offset = object.offset?object.offset:0;
+		if(i === (array.length - 1)) {
+			Y += (this.y - quantityY) * object.ratio + offset;
+		} else {
+			quantityY += object.quantity;
+			Y += object.quantity * object.ratio + offset;
+		}
+
+	}, this);
+
+	this.valueX = X;
+	this.valueY = Y;
+console.log({
+	"x": X,
+	"y": Y
+});
+	return {
+		"x": X,
+		"y": Y
+	}
+
 };
