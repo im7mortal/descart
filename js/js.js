@@ -1,9 +1,3 @@
-
-
-function Graph () {
-
-}
-
 var widthSVGdescart = document.body.clientWidth;
 var heightSVGdescart = screen.height * 0.75;
 var centrHSVGdescart = screen.height * 0.75 / 2;
@@ -19,7 +13,6 @@ var countMark = {
 	"y": 0
 };
 
-//    var originX = 0;
 var marks = {};
 var points = {};
 
@@ -100,13 +93,6 @@ var zero = descart.append("circle")
 		"stroke-width": 2
 	});
 
-//    var elementOrigin = document.getElementById('originX');
-//    elementOrigin.value = 0;
-//    elementOrigin.onchange = function() {
-//        originX = this.value;
-//    };
-
-
 
 var marksGroup = descart.append("g")
 	.attr("id", "marksGroup");
@@ -123,11 +109,6 @@ function Point () {
 	this.name = "point" + countPoints++;
 	points[this.name] = this;
 	var self = this;
-//        this.input = d3.select("#mark")
-//                .append("input")
-//                .attr("name", this.name)
-//                .attr("type", "text")[0][0];
-//        this.input.onchange = this.engine.bind(this);
 
 	this.g = descart.append("g")
 		.attr("id", this.name)
