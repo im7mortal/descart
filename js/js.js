@@ -103,3 +103,12 @@ function fasten (name) {
 	if(name === "descart")descart.classed("descart", fastenFlag[name] = !fastenFlag[name]);
 	if(name === "graph")graph.classed("descart", fastenFlag[name] = !fastenFlag[name]);
 }
+function sign (value) {
+	if (value > 0) {
+		return(1)
+	} else if (value < 0) {
+		return(-1)
+	} else {
+		return(0)
+	}
+}

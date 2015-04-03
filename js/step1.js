@@ -40,3 +40,7 @@ origin.y.originYInput.onchange = function () {
 		origin.y.value = null;
 	}
 };
+origin.x.originXInput.value = 0;
+origin.x.originXInput.onchange();
+origin.y.originYInput.value = 0;
+origin.y.originYInput.onchange();
