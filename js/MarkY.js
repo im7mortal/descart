@@ -12,16 +12,57 @@ function getMarkY (name) {
 	});
 	return mark;
 }
+function removeMarkY (name) {
+	var index;
+	marks_Y.some(function(object, i, array) {
+		if (object.name === name) {
+			index = i;
+			return true
+		}
+	});
+	marks_Y.splice(index, 1)
+}
 
 function MarkY() {
 	this.name = "markY" + countMarkY++;
 	marks_Y.push(this);
-	this.input = d3.select("#mark")
+
+	this.inputGroup = d3.select("#inputY")
+		.append("div")
+		.classed("input-group", true);
+	this.inputGroup
+		.append("span")
+		.classed("input-group-btn", true)
+		.append("button")
+		.on('click', this.remove.bind(this))
+		.attr("type", "button")
+		.classed("btn btn-default", true)
+		.append("span")
+		.attr("aria-hidden", "true")
+		.classed("glyphicon glyphicon-remove", true);
+
+
+
+
+	this.input = this.inputGroup
 		.append("input")
+		.classed("form-control", true)
+		.attr("type", "text")
 		.attr("name", this.name)
-		.attr("type", "text")[0][0];
+		.attr("placeholder", "Search for...")[0][0];
+
 	this.input.onchange = this.init.bind(this);
 }
+
+
+
+MarkY.prototype.remove = function () {
+	console.log(this);
+	this.g.remove();
+	this.inputGroup.remove();
+	removeMarkY(this.name)
+};
+
 
 MarkY.prototype.ratiy = function () {
 
