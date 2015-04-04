@@ -79,13 +79,6 @@ MarkY.prototype.init = function () {
 				if (mark.value === number) {
 					y = centrHSVGdescart - dq;
 					mark.quantity = dq;
-					/*if (index === currentArray.length - 1) {
-						y = centrHSVGdescart - dq;
-						mark.quantity = currentArray[index - 1].quantity + dq;
-					} else {
-						y = centrHSVGdescart + dq;
-						mark.quantity = currentArray[index + 1].quantity - dq;
-					}*/
 				}
 			}, this);
 		} else {
@@ -229,12 +222,12 @@ MarkY.prototype.accelerator = function (arr, event) {
 		if(object.name === event.target.id) {
 			if (event.dy < 0) {
 				if (i !== array.length - 1) {
-					if (array[i + 1].dQuantity + event.dy <= 15) {
+					if (array[i + 1].dQuantity + event.dy <= 5) {
 						event.dy = 0;
 					}
 				}
 			} else {
-				if (object.dQuantity + event.dy  <= 15) {
+				if (object.dQuantity + event.dy  <= 5) {
 					event.dy = 0;
 				}
 			}
@@ -250,7 +243,7 @@ interact('.pointy')
 			var mark = getMarkY(target.id);
 			event.dy = 1 * sign(event.dy);
 			if (event.dy === 0) return;
-			mark.accelerator(marksYarr, event);
+			mark.accelerator(marks_Y, event);
 
 			var x = 0,
 				y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;

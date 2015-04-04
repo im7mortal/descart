@@ -217,12 +217,12 @@ MarkX.prototype.accelerator = function (arr, event) {
 		if (object.name === event.target.id) {
 			if (event.dx < 0) {
 				if (i !== array.length - 1) {
-					if (array[i + 1].dQuantity + event.dx <= 15) {
+					if (array[i + 1].dQuantity + event.dx <= 5) {
 						event.dx = 0;
 					}
 				}
 			} else {
-				if (object.dQuantity + event.dx <= 15) {
+				if (object.dQuantity + event.dx <= 5) {
 					event.dx = 0;
 				}
 			}
@@ -238,7 +238,7 @@ interact('.pointx')
 			var mark = getMarkX(target.id);
 			event.dx = 1 * sign(event.dx);
 			if (event.dx === 0) return;
-			mark.accelerator(marksXarr, event);
+			mark.accelerator(marks_X, event);
 
 			var x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx,
 				y = 0;
