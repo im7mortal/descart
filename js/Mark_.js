@@ -1,7 +1,8 @@
+/*
 var countMarkY = 0;
 var marks_Y = [];
 var range = {};
-range.y = [];
+
 function getMarkY (name) {
 	var mark;
 	marks_Y.some(function(object, i, array) {
@@ -23,37 +24,6 @@ function MarkY() {
 	this.input.onchange = this.init.bind(this);
 }
 
-MarkY.prototype.ratiy = function () {
-
-	var Y = 0;
-	var arry = range.y.filter(function (o,i,a) {
-		if(!i) return true;
-		if(this.value > o.originalValue) {
-			return true;
-		} else if (this.value > a[i - 1].originalValue) {
-			return true;
-		}
-		return false;
-	}, this);
-
-
-	var tValue = 0;
-	arry.forEach(function (object, i, array) {
-		var offset = object.offset ? object.offset : 0;
-		var value;
-		if (i === (array.length - 1)) {
-			value = this.value - tValue;
-		} else {
-			value = object.value;
-		}
-		tValue += object.value;
-		console.log(value, tValue);
-		Y += (value - offset) * (1 / object.ratio);
-
-	}, this);
-	return Y;
-};
-
 MarkY.prototype.init = function () {
 	var number = parseFloat(this.input.value);
 	var orig = origin.y.value;
@@ -62,7 +32,7 @@ MarkY.prototype.init = function () {
 		this.g = descart.append("g")
 			.attr("id", this.name);
 
-		var x1, x2, y1, y2, cx, cy, inf1, inf2, y;
+		var x1, x2, y1, y2, cx, cy, inf1, inf2;
 		marks_Y = marks_Y.sort(function (object1, object2) {
 			if (object1.value > object2.value) {
 				return 1;
@@ -73,23 +43,21 @@ MarkY.prototype.init = function () {
 		this.x = 0;
 		this.y = -100;
 		if (marks_Y.length > 1) {
-			var dq = this.ratiy();
-
 			marks_Y.forEach(function (mark, index, currentArray) {
 				if (mark.value === number) {
-					y = centrHSVGdescart - dq;
-					mark.quantity = dq;
-					/*if (index === currentArray.length - 1) {
-						y = centrHSVGdescart - dq;
-						mark.quantity = currentArray[index - 1].quantity + dq;
+					if (index === currentArray.length - 1) {
+
+						cy = centrHSVGdescart - currentArray[index - 1].quantity - 50;
+						mark.quantity = currentArray[index - 1].quantity + 50;
+
 					} else {
-						y = centrHSVGdescart + dq;
-						mark.quantity = currentArray[index + 1].quantity - dq;
-					}*/
+						cy = centrHSVGdescart - currentArray[index + 1].quantity + 50;
+						mark.quantity = currentArray[index + 1].quantity - 50;
+					}
 				}
-			}, this);
+			});
 		} else {
-			y = centrHSVGdescart - 100;
+			cy = centrHSVGdescart - 100;
 			this.quantity = this.y + 200;
 		}
 
@@ -97,37 +65,38 @@ MarkY.prototype.init = function () {
 		x1 = centrWSVGdescart - 50;
 		x2 = centrWSVGdescart + 50;
 		cx = centrWSVGdescart;
+		y1 = y2 = cy;
 
 		this.g.classed("pointy", true);
 
 
 		this.g.append("line")
 			.attr("x1", x1)
-			.attr("y1", y)
+			.attr("y1", y1)
 			.attr("x2", x2)
-			.attr("y2", y)
+			.attr("y2", y2)
 			.style({
 				"stroke": "red",
 				"stroke-width": 1
 			});
 
 		this.g.append("line")
-		 .attr("x1", centrWSVGdescart - 2000)
-		 .attr("y1", y)
-		 .attr("x2", centrWSVGdescart + 2000)
-		 .attr("y2", y)
-		 .style({
-		 "stroke": "red",
-		 "opacity": 0.5,
-		 "stroke-width": 0.7
-		 });
+			.attr("x1", centrWSVGdescart - 2000)
+			.attr("y1", y1)
+			.attr("x2", centrWSVGdescart + 2000)
+			.attr("y2", y2)
+			.style({
+				"stroke": "red",
+				"opacity": 0.5,
+				"stroke-width": 0.7
+			});
 
 		this.g.append("line")
 			.attr("id", "area")
 			.attr("x1", x1)
-			.attr("y1", y)
+			.attr("y1", y1)
 			.attr("x2", x2)
-			.attr("y2", y)
+			.attr("y2", y2)
 			.style({
 				"stroke": "red",
 				"opacity": 0,
@@ -137,7 +106,7 @@ MarkY.prototype.init = function () {
 		this.g.append("circle")
 			.attr("id", "zero")
 			.attr("cx", cx)
-			.attr("cy", y)
+			.attr("cy", cy)
 			.attr("r", 1)
 			.style({
 				"stroke": "black",
@@ -147,8 +116,8 @@ MarkY.prototype.init = function () {
 
 		if (!this.text) {
 			this.text = this.g.append("text")
-				.attr("x", x1 - 15)
-				.attr("y", y - 15)
+				.attr("x", centrWSVGdescart - 65)
+				.attr("y", centrHSVGdescart - 105)
 		}
 		this.text.text(this.value);
 
@@ -207,14 +176,12 @@ MarkY.prototype.fillRange = function () {
 		}
 		var object = {
 			"originalQuantity": mark.quantity,
-			"originalValue": mark.value,
 			"quantity": quantity,
 			"value": value,
 			"ratio": value / quantity
 		};
 		mark.dQuantity = quantity;
 		if (mark.quantity === minElement) object.offset = +origin.y.value;
-		console.log(object);
 		range.y.push(object)
 	})
 };
@@ -267,3 +234,4 @@ interact('.pointy')
 		}
 
 	});
+*/

@@ -74,6 +74,7 @@ Point.prototype.rationer = function () {
 		}
 		return false;
 	}, this);
+	console.log(arry);
 	arry.forEach(function (object, i, array) {
 		var offset = object.offset?object.offset:0;
 		if(i === (array.length - 1)) {
