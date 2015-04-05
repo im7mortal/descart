@@ -49,7 +49,7 @@
 
 <div class="container">
 	<div class="row">
-		<div class="col-md-4">
+		<div class="col-md-3">
 			<div id="tipX">Задайте начало отсчета по X</div>
 			<div class="input-group">
 				<span class="input-group-addon">Начало отсчета по оси X</span>
@@ -69,16 +69,19 @@
 				<input name="files" type="file" id="fileInput" class="form-control" placeholder="Username"
 				       aria-describedby="basic-addon1">
 			</div>
+
+		</div>
+		<div class="col-md-3">
 			<button class="btn btn-default btn-block" onclick="fasten(this.name)" name="descart">Зафиксировать систему координат</button>
 			<button class="btn btn-default btn-block" onclick="fasten(this.name)" name="graph">Зафиксировать график</button>
-
-
 		</div>
-		<div class="col-md-4" id="inputX">
-			<button onclick="new MarkX()">Добавить отметку X</button>
+		<div class="col-md-3">
+			<button class="btn btn-default btn-block" onclick="new MarkX()">Добавить отметку X</button>
+			<div id="inputX">
 
+			</div>
 		</div>
-		<div class="col-md-4">
+		<div class="col-md-3">
 			<button class="btn btn-default btn-block" onclick="new MarkY()">Добавить отметку Y</button>
 			<div id="inputY">
 
@@ -101,6 +104,7 @@
 <script src="js/inter.js"></script>
 <script src="js/fileupload.js"></script>
 <!--<script src="js/Mark.js"></script>-->
+<script src="js/Mark_.js"></script>
 <script src="js/MarkY.js"></script>
 <script src="js/MarkX.js"></script>
 <script src="js/point.js"></script>

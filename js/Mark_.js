@@ -1,11 +1,15 @@
-/*
-var countMarkY = 0;
+var countMark = 0;
 var marks_Y = [];
-var range = {};
+var marks_X = [];
+var range = {
+	"x": [],
+	"y": []
+};
 
-function getMarkY (name) {
+
+function getMark(name, array) {
 	var mark;
-	marks_Y.some(function(object, i, array) {
+	array.some(function (object, i, array) {
 		if (object.name === name) {
 			mark = object;
 			return true
@@ -13,139 +17,78 @@ function getMarkY (name) {
 	});
 	return mark;
 }
-
-function MarkY() {
-	this.name = "markY" + countMarkY++;
-	marks_Y.push(this);
-	this.input = d3.select("#mark")
-		.append("input")
-		.attr("name", this.name)
-		.attr("type", "text")[0][0];
-	this.input.onchange = this.init.bind(this);
+function removeMark(name, array) {
+	var index;
+	array.some(function (object, i, array) {
+		if (object.name === name) {
+			index = i;
+			return true
+		}
+	});
+	array.splice(index, 1)
 }
 
-MarkY.prototype.init = function () {
+function Mark() {}
+
+Mark.prototype.handler = function () {
 	var number = parseFloat(this.input.value);
-	var orig = origin.y.value;
-	if (isFinite(number) && orig) {
+	var flag;
+	this.array.some(function (object) {
+		if (object.value === number) {
+			flag = true;
+			return true
+		}
+	});
+	if (isFinite(number) && this.origin && !flag) {
 		this.value = number;
-		this.g = descart.append("g")
-			.attr("id", this.name);
+		this.render();
 
-		var x1, x2, y1, y2, cx, cy, inf1, inf2;
-		marks_Y = marks_Y.sort(function (object1, object2) {
-			if (object1.value > object2.value) {
-				return 1;
-			} else {
-				return -1;
-			}
-		});
-		this.x = 0;
-		this.y = -100;
-		if (marks_Y.length > 1) {
-			marks_Y.forEach(function (mark, index, currentArray) {
-				if (mark.value === number) {
-					if (index === currentArray.length - 1) {
-
-						cy = centrHSVGdescart - currentArray[index - 1].quantity - 50;
-						mark.quantity = currentArray[index - 1].quantity + 50;
-
-					} else {
-						cy = centrHSVGdescart - currentArray[index + 1].quantity + 50;
-						mark.quantity = currentArray[index + 1].quantity - 50;
-					}
-				}
-			});
-		} else {
-			cy = centrHSVGdescart - 100;
-			this.quantity = this.y + 200;
-		}
-
-
-		x1 = centrWSVGdescart - 50;
-		x2 = centrWSVGdescart + 50;
-		cx = centrWSVGdescart;
-		y1 = y2 = cy;
-
-		this.g.classed("pointy", true);
-
-
-		this.g.append("line")
-			.attr("x1", x1)
-			.attr("y1", y1)
-			.attr("x2", x2)
-			.attr("y2", y2)
-			.style({
-				"stroke": "red",
-				"stroke-width": 1
-			});
-
-		this.g.append("line")
-			.attr("x1", centrWSVGdescart - 2000)
-			.attr("y1", y1)
-			.attr("x2", centrWSVGdescart + 2000)
-			.attr("y2", y2)
-			.style({
-				"stroke": "red",
-				"opacity": 0.5,
-				"stroke-width": 0.7
-			});
-
-		this.g.append("line")
-			.attr("id", "area")
-			.attr("x1", x1)
-			.attr("y1", y1)
-			.attr("x2", x2)
-			.attr("y2", y2)
-			.style({
-				"stroke": "red",
-				"opacity": 0,
-				"stroke-width": 30
-			});
-
-		this.g.append("circle")
-			.attr("id", "zero")
-			.attr("cx", cx)
-			.attr("cy", cy)
-			.attr("r", 1)
-			.style({
-				"stroke": "black",
-				"stroke-width": 2
-			});
-
-
-		if (!this.text) {
-			this.text = this.g.append("text")
-				.attr("x", centrWSVGdescart - 65)
-				.attr("y", centrHSVGdescart - 105)
-		}
-		this.text.text(this.value);
-
-
-	} else if (this.g) {
+	} else {
 		this.value = null;
 		this.quantity = null;
-		this.g.remove();
-		this.g = null;
-		this.text.remove();
-		this.text = null;
+		if (this.g) {
+			this.g.remove();
+		}
+		this.remove()
 	}
 	this.calc();
 };
 
-MarkY.prototype.eng = function (event) {
-	this.quantity -= event.dy;
-	this.calc();
+
+Mark.prototype.init = function () {
+	this.name = "mark"+ this.axes + countMark++;
+	this.inputGroup = d3.select("#input"+ this.axes)
+		.append("div")
+		.classed("input-group", true);
+	this.inputGroup
+		.append("span")
+		.classed("input-group-btn", true)
+		.append("button")
+		.on('click', this.remove.bind(this))
+		.attr("type", "button")
+		.classed("btn btn-default", true)
+		.append("span")
+		.attr("aria-hidden", "true")
+		.classed("glyphicon glyphicon-remove", true);
+
+	this.input = this.inputGroup
+		.append("input")
+		.classed("form-control", true)
+		.attr("type", "text")
+		.attr("name", this.name)
+		.attr("placeholder", "Search for...")[0][0];
+
+	this.input.onchange = this.handler.bind(this);
 };
 
-MarkY.prototype.calc = function () {
-	this.prepareArray();
-	this.fillRange();
+Mark.prototype.remove = function () {
+	if (this.g) this.g.remove();
+	if (this.inputGroup) this.inputGroup.remove();
+	removeMark(this.name, this.array)
 };
 
-
-MarkY.prototype.prepareArray = function () {
-	marks_Y.sort(function (object1, object2) {
+Mark.prototype.prepareArray = function () {
+	this.array.sort(function (object1, object2) {
 		if (object1.value > object2.value) {
 			return 1;
 		} else {
@@ -154,84 +97,88 @@ MarkY.prototype.prepareArray = function () {
 	})
 };
 
-MarkY.prototype.minElementArray = function () {
+Mark.prototype.minElementArray = function () {
 	var minElement = Infinity;
-	marks_Y.forEach(function (o) {
+	this.array.forEach(function (o) {
 		if (o.quantity < minElement) minElement = o.quantity;
 	});
 	return minElement;
 };
 
-MarkY.prototype.fillRange = function () {
+
+Mark.prototype.ratiy = function () {
+	var Y = 0;
+	var tValue = 0;
+	this.rangeArray
+		.filter(function (o,i,a) {
+			if(!i) return true;
+			if(this.value > o.originalValue) {
+				return true;
+			} else if (this.value > a[i - 1].originalValue) {
+				return true;
+			}
+			return false;
+		}, this)
+		.forEach(function (object, i, array) {
+			var offset = object.offset ? object.offset : 0;
+			var value;
+			if (i === (array.length - 1)) {
+				value = this.value - tValue;
+			} else {
+				value = object.value;
+			}
+			tValue += object.value;
+			Y += (value - offset) * (1 / object.ratio);
+		}, this);
+	return Y;
+};
+
+Mark.prototype.calc = function () {
+	this.prepareArray();
+	this.fillRange();
+};
+
+Mark.prototype.fillRange = function () {
 	var minElement = this.minElementArray();
-	range.y = [];
-	marks_Y.forEach(function (mark, index, currentArray) {
+	this.rangeArray.splice(0, this.rangeArray.length);
+	this.array.forEach(function (mark, index, currentArray) {
 		var quantity, value;
 		if (index !== 0) {
 			value = mark.value - currentArray[index - 1].value;
 			quantity = mark.quantity - currentArray[index - 1].quantity;
 		} else {
-			value = mark.value - +origin.y.value;
+			value = mark.value - +this.origin.value;
 			quantity = mark.quantity;
 		}
 		var object = {
 			"originalQuantity": mark.quantity,
+			"originalValue": mark.value,
 			"quantity": quantity,
 			"value": value,
 			"ratio": value / quantity
 		};
 		mark.dQuantity = quantity;
-		if (mark.quantity === minElement) object.offset = +origin.y.value;
-		range.y.push(object)
-	})
+		if (mark.quantity === minElement) object.offset = +this.origin.value;
+		this.rangeArray.push(object)
+	}, this)
 };
 
 
-
-
-
-
-MarkY.prototype.accelerator = function (arr, event) {
-	arr.forEach(function(object, i, array) {
-		if(object.name === event.target.id) {
-			if (event.dy < 0) {
+Mark.prototype.accelerator = function (quantity) {
+	this.array.forEach(function(object, i, array) {
+		if(object.name === this.name) {
+			if (quantity < 0) {
 				if (i !== array.length - 1) {
-					if (array[i + 1].dQuantity + event.dy <= 15) {
-						event.dy = 0;
+					if (array[i + 1].dQuantity + quantity <= 5) {
+						quantity = 0;
 					}
 				}
 			} else {
-				if (object.dQuantity + event.dy  <= 15) {
-					event.dy = 0;
+				if (object.dQuantity + quantity  <= 5) {
+					quantity = 0;
 				}
 			}
 		}
-	})
+	}, this);
+	return quantity;
 }
-
-
-interact('.pointy')
-	.draggable({
-		onmove: function (event) {
-			var target = event.target;
-			var mark = getMarkY(target.id);
-			event.dy = 1 * sign(event.dy);
-			if (event.dy === 0) return;
-			mark.accelerator(marksYarr, event);
-
-			var x = 0,
-				y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
-			target.style.webkitTransform =
-				target.style.transform =
-					'translate(' + x + 'px, ' + y + 'px)';
-			mark.eng(event);
-
-			target.setAttribute('data-x', x);
-			target.setAttribute('data-y', y);
-		},
-		onend: function (event) {
-			var mark = getMarkY(event.target.id);
-		}
-
-	});
-*/
