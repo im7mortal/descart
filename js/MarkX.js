@@ -99,7 +99,6 @@ interact('.pointx')
 			target.style.webkitTransform =
 				target.style.transform =
 					'translate(' + x + 'px, ' + y + 'px)';
-			mark.eng(event);
 
 			target.setAttribute('data-x', x);
 			target.setAttribute('data-y', y);
@@ -107,3 +106,22 @@ interact('.pointx')
 		onend: function (event) {
 		}
 	});
+
+MarkX.prototype.accelerator = function (quantity) {
+	this.array.forEach(function (object, i, array) {
+		if (object.name === this.name) {
+			if (quantity < 0) {
+				if (object.dQuantity + quantity <= 5) {
+					quantity = 0;
+				}
+			} else {
+				if (i !== array.length - 1) {
+					if (array[i + 1].dQuantity + quantity <= 5) {
+						quantity = 0;
+					}
+				}
+			}
+		}
+	}, this);
+	return quantity;
+};

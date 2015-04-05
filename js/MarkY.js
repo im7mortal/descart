@@ -78,6 +78,24 @@ MarkY.prototype.render = function () {
 	this.array.push(this);
 };
 
+MarkY.prototype.accelerator = function (quantity) {
+	this.array.forEach(function (object, i, array) {
+		if (object.name === this.name) {
+			if (quantity < 0) {
+				if (i !== array.length - 1) {
+					if (array[i + 1].dQuantity + quantity <= 5) {
+						quantity = 0;
+					}
+				}
+			} else {
+				if (object.dQuantity + quantity <= 5) {
+					quantity = 0;
+				}
+			}
+		}
+	}, this);
+	return quantity;
+};
 
 interact('.pointy')
 	.draggable({
