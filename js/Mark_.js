@@ -2,8 +2,8 @@ var countMark = 0;
 var marks_Y = [];
 var marks_X = [];
 var range = {
-	"x": [],
-	"y": []
+	'x': [],
+	'y': []
 };
 
 
@@ -28,7 +28,8 @@ function removeMark(name, array) {
 	array.splice(index, 1)
 }
 
-function Mark() {}
+function Mark() {
+}
 
 Mark.prototype.handler = function () {
 	var number = parseFloat(this.input.value);
@@ -56,27 +57,27 @@ Mark.prototype.handler = function () {
 
 
 Mark.prototype.init = function () {
-	this.name = "mark"+ this.axes + countMark++;
-	this.inputGroup = d3.select("#input"+ this.axes)
-		.append("div")
-		.classed("input-group", true);
+	this.name = 'mark' + this.axes + countMark++;
+	this.inputGroup = d3.select('#input' + this.axes)
+		.append('div')
+		.classed('input-group', true);
 	this.inputGroup
-		.append("span")
-		.classed("input-group-btn", true)
-		.append("button")
+		.append('span')
+		.classed('input-group-btn', true)
+		.append('button')
 		.on('click', this.remove.bind(this))
-		.attr("type", "button")
-		.classed("btn btn-default", true)
-		.append("span")
-		.attr("aria-hidden", "true")
-		.classed("glyphicon glyphicon-remove", true);
+		.attr('type', 'button')
+		.classed('btn btn-default', true)
+		.append('span')
+		.attr('aria-hidden', 'true')
+		.classed('glyphicon glyphicon-remove', true);
 
 	this.input = this.inputGroup
-		.append("input")
-		.classed("form-control", true)
-		.attr("type", "text")
-		.attr("name", this.name)
-		.attr("placeholder", "Search for...")[0][0];
+		.append('input')
+		.classed('form-control', true)
+		.attr('type', 'text')
+		.attr('name', this.name)
+		.attr('placeholder', 'Search for...')[0][0];
 
 	this.input.onchange = this.handler.bind(this);
 };
@@ -110,9 +111,9 @@ Mark.prototype.ratiy = function () {
 	var Y = 0;
 	var tValue = 0;
 	this.rangeArray
-		.filter(function (o,i,a) {
-			if(!i) return true;
-			if(this.value > o.originalValue) {
+		.filter(function (o, i, a) {
+			if (!i) return true;
+			if (this.value > o.originalValue) {
 				return true;
 			} else if (this.value > a[i - 1].originalValue) {
 				return true;
@@ -151,11 +152,11 @@ Mark.prototype.fillRange = function () {
 			quantity = mark.quantity;
 		}
 		var object = {
-			"originalQuantity": mark.quantity,
-			"originalValue": mark.value,
-			"quantity": quantity,
-			"value": value,
-			"ratio": value / quantity
+			'originalQuantity': mark.quantity,
+			'originalValue': mark.value,
+			'quantity': quantity,
+			'value': value,
+			'ratio': value / quantity
 		};
 		mark.dQuantity = quantity;
 		if (mark.quantity === minElement) object.offset = +this.origin.value;
@@ -165,8 +166,8 @@ Mark.prototype.fillRange = function () {
 
 
 Mark.prototype.accelerator = function (quantity) {
-	this.array.forEach(function(object, i, array) {
-		if(object.name === this.name) {
+	this.array.forEach(function (object, i, array) {
+		if (object.name === this.name) {
 			if (quantity < 0) {
 				if (i !== array.length - 1) {
 					if (array[i + 1].dQuantity + quantity <= 5) {
@@ -174,11 +175,11 @@ Mark.prototype.accelerator = function (quantity) {
 					}
 				}
 			} else {
-				if (object.dQuantity + quantity  <= 5) {
+				if (object.dQuantity + quantity <= 5) {
 					quantity = 0;
 				}
 			}
 		}
 	}, this);
 	return quantity;
-}
+};

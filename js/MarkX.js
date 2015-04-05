@@ -16,9 +16,9 @@ MarkX.prototype.render = function () {
 	y2 = centrHSVGdescart + 50;
 	cy = centrHSVGdescart;
 
-	this.g = descart.append("g")
-		.attr("id", this.name)
-		.classed("pointx", true);
+	this.g = descart.append('g')
+		.attr('id', this.name)
+		.classed('pointx', true);
 
 	if (this.array.length > 0) {
 		this.quantity = this.ratiy();
@@ -28,52 +28,52 @@ MarkX.prototype.render = function () {
 		x = centrWSVGdescart + 100;
 	}
 
-	this.g.append("line")
-		.attr("x1", x)
-		.attr("y1", y1)
-		.attr("x2", x)
-		.attr("y2", y2)
+	this.g.append('line')
+		.attr('x1', x)
+		.attr('y1', y1)
+		.attr('x2', x)
+		.attr('y2', y2)
 		.style({
-			"stroke": "red",
-			"stroke-width": 1
+			'stroke': 'red',
+			'stroke-width': 1
 		});
 
-	this.g.append("line")
-		.attr("x1", x)
-		.attr("y1", centrHSVGdescart + 2000)
-		.attr("x2", x)
-		.attr("y2", centrHSVGdescart - 2000)
+	this.g.append('line')
+		.attr('x1', x)
+		.attr('y1', centrHSVGdescart + 2000)
+		.attr('x2', x)
+		.attr('y2', centrHSVGdescart - 2000)
 		.style({
-			"stroke": "red",
-			"opacity": 0.5,
-			"stroke-width": 0.5
+			'stroke': 'red',
+			'opacity': 0.5,
+			'stroke-width': 0.5
 		});
 
-	this.g.append("line")
-		.attr("id", "area")
-		.attr("x1", x)
-		.attr("y1", y1)
-		.attr("x2", x)
-		.attr("y2", y2)
+	this.g.append('line')
+		.attr('id', 'area')
+		.attr('x1', x)
+		.attr('y1', y1)
+		.attr('x2', x)
+		.attr('y2', y2)
 		.style({
-			"stroke": "red",
-			"opacity": 0,
-			"stroke-width": 30
+			'stroke': 'red',
+			'opacity': 0,
+			'stroke-width': 30
 		});
 
-	this.g.append("circle")
-		.attr("id", "zero")
-		.attr("cx", x)
-		.attr("cy", cy)
-		.attr("r", 1)
+	this.g.append('circle')
+		.attr('id', 'zero')
+		.attr('cx', x)
+		.attr('cy', cy)
+		.attr('r', 1)
 		.style({
-			"stroke": "black",
-			"stroke-width": 2
+			'stroke': 'black',
+			'stroke-width': 2
 		});
 
-	this.g.append("text")
-		.attr("x", x)
-		.attr("y", y1 - 15)
+	this.g.append('text')
+		.attr('x', x)
+		.attr('y', y1 - 15)
 		.text(this.value);
 
 	this.array.push(this);
@@ -85,7 +85,7 @@ interact('.pointx')
 			var target = event.target;
 
 			var mark = getMark(target.id, marks_X);
-			if(!mark) return;
+			if (!mark) return;
 
 			event.dx = 1 * sign(event.dx);
 			if (event.dx === 0) return;
@@ -104,5 +104,6 @@ interact('.pointx')
 			target.setAttribute('data-x', x);
 			target.setAttribute('data-y', y);
 		},
-		onend: function (event) {}
+		onend: function (event) {
+		}
 	});
