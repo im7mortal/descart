@@ -40,17 +40,15 @@ Mark.prototype.handler = function () {
 			return true
 		}
 	});
+	if (this.g) {
+		this.value = null;
+		this.quantity = null;
+		this.g.remove();
+		removeMark(this.name, this.array);
+	}
 	if (isFinite(number) && this.origin && !flag) {
 		this.value = number;
 		this.render();
-
-	} else {
-		this.value = null;
-		this.quantity = null;
-		if (this.g) {
-			this.g.remove();
-		}
-		this.remove()
 	}
 	this.calc();
 };
