@@ -1,22 +1,193 @@
-function Mark (axes) {
-	this.name = "mark_" + axes + countMark[axes]++;
-	if (axes === 'x') {
-		marksX[this.name] = this;
-	} else {
-		marksY[this.name] = this;
-	}
-	var self = this;
-	this.axes = axes;
-	this.input = d3.select("#mark")
-		.append("input")
-		.attr("name", this.name)
-		.attr("type", "text")[0][0];
+var countMark = 0;
+var marks_Y = [];
+var marks_X = [];
+var range = {
+	'x': [],
+	'y': []
+};
 
-	this.input.onchange = this.engine.bind(this);
 
+function getMark(name, array) {
+	var mark;
+	array.some(function (object, i, array) {
+		if (object.name === name) {
+			mark = object;
+			return true
+		}
+	});
+	return mark;
+}
+function removeMark(name, array) {
+	var index;
+	array.some(function (object, i, array) {
+		if (object.name === name) {
+			index = i;
+			return true
+		}
+	});
+	array.splice(index, 1)
 }
 
-Mark.prototype.resolveConflict = function (flag, textError) {
+function Mark() {
+}
+
+Mark.prototype.handler = function () {
+	var number = parseFloat(this.input.value);
+	var flag;
+	this.array.some(function (object) {
+		if (object.value === number) {
+			flag = true;
+			return true
+		}
+	});
+	if (this.g) {
+		this.value = null;
+		this.quantity = null;
+		this.g.remove();
+		removeMark(this.name, this.array);
+	}
+	if (isFinite(number) && this.origin && !flag) {
+		this.value = number;
+		this.render();
+	}
+	this.calc();
+};
+
+
+Mark.prototype.init = function (value, quantity) {
+	this.name = 'mark' + this.axes + countMark++;
+	this.inputGroup = d3.select('#input' + this.axes)
+		.append('div')
+		.classed('input-group', true);
+	this.inputGroup
+		.append('span')
+		.classed('input-group-btn', true)
+		.append('button')
+		.on('click', this.remove.bind(this))
+		.attr('type', 'button')
+		.classed('btn btn-default', true)
+		.append('span')
+		.attr('aria-hidden', 'true')
+		.classed('glyphicon glyphicon-remove', true);
+
+	this.input = this.inputGroup
+		.append('input')
+		.classed('form-control', true)
+		.attr('type', 'text')
+		.attr('name', this.name)
+		.attr('placeholder', 'Search for...')[0][0];
+
+	this.input.onchange = this.handler.bind(this);
+	if(value && quantity) {
+
+	}
+
+};
+
+Mark.prototype.remove = function () {
+	if (this.g) this.g.remove();
+	if (this.inputGroup) this.inputGroup.remove();
+	removeMark(this.name, this.array)
+};
+
+Mark.prototype.prepareArray = function () {
+	this.array.sort(function (object1, object2) {
+		if (object1.value > object2.value) {
+			return 1;
+		} else {
+			return -1;
+		}
+	})
+};
+
+Mark.prototype.minElementArray = function () {
+	var minElement = Infinity;
+	this.array.forEach(function (o) {
+		if (o.quantity < minElement) minElement = o.quantity;
+	});
+	return minElement;
+};
+
+
+Mark.prototype.ratiy = function () {
+	var Y = 0;
+	var tValue = 0;
+	this.rangeArray
+		.filter(function (o, i, a) {
+			if (!i) return true;
+			if (this.value > o.originalValue) {
+				return true;
+			} else if (this.value > a[i - 1].originalValue) {
+				return true;
+			}
+			return false;
+		}, this)
+		.forEach(function (object, i, array) {
+			var offset = object.offset ? object.offset : 0;
+			var value;
+			if (i === (array.length - 1)) {
+				value = this.value - tValue;
+			} else {
+				value = object.value;
+			}
+			tValue += object.value;
+			Y += (value - offset) * (1 / object.ratio);
+		}, this);
+	return Y;
+};
+
+Mark.prototype.calc = function () {
+	this.prepareArray();
+	this.fillRange();
+};
+
+Mark.prototype.fillRange = function () {
+	var minElement = this.minElementArray();
+	this.rangeArray.splice(0, this.rangeArray.length);
+	this.array.forEach(function (mark, index, currentArray) {
+		var quantity, value;
+		if (index !== 0) {
+			value = mark.value - currentArray[index - 1].value;
+			quantity = mark.quantity - currentArray[index - 1].quantity;
+		} else {
+			value = mark.value - +this.origin.value;
+			quantity = mark.quantity;
+		}
+		var object = {
+			'originalQuantity': mark.quantity,
+			'originalValue': mark.value,
+			'quantity': quantity,
+			'value': value,
+			'ratio': value / quantity
+		};
+		mark.dQuantity = quantity;
+		if (mark.quantity === minElement) object.offset = +this.origin.value;
+		this.rangeArray.push(object)
+	}, this)
+};
+
+
+Mark.prototype.accelerator = function (quantity) {
+	this.array.forEach(function (object, i, array) {
+		if (object.name === this.name) {
+			if (quantity < 0) {
+				if (i !== array.length - 1) {
+					if (array[i + 1].dQuantity + quantity <= 5) {
+						quantity = 0;
+					}
+				}
+			} else {
+				if (object.dQuantity + quantity <= 5) {
+					quantity = 0;
+				}
+			}
+		}
+	}, this);
+	return quantity;
+};
+
+
+/*Mark.prototype.resolveConflict = function (flag, textError) {
 	var self = this;
 	if (flag) {
 		if (!this.conflict || !this.conflict.interval) {
@@ -53,266 +224,4 @@ Mark.prototype.resolveConflict = function (flag, textError) {
 				})
 		}
 	}
-};
-
-Mark.prototype.engine = function () {
-	var number = parseFloat(this.input.value);
-	var orig = origin[this.axes].value;
-	if (isFinite(number) && orig) {
-
-
-		this.value = number;
-		this.g = descart.append("g")
-			.attr("id", this.name);
-
-
-
-		var x1, x2, y1, y2, cx, cy, inf1, inf2;
-		if (this.axes === 'x') {
-			this.x = 100;
-			this.y = 0;
-			this.quantity = this.x;
-			x1 = x2 = cx = centrWSVGdescart + 100;
-			y1 = centrHSVGdescart - 50;
-			y2 = centrHSVGdescart + 50;
-			cy = centrHSVGdescart;
-			inf1 = centrHSVGdescart + 2000;
-			inf2 = centrHSVGdescart - 2000;
-
-			this.g.append("line")
-				.attr("x1", centrWSVGdescart + 100)
-				.attr("y1", centrHSVGdescart + 2000)
-				.attr("x2", centrWSVGdescart + 100)
-				.attr("y2", centrHSVGdescart - 2000)
-				.style({
-					"stroke": "red",
-					"opacity": 0.5,
-					"stroke-width": 0.5
-				});
-			this.g.classed("pointx", true)
-		} else {
-			var marksYarr1 = d3.map(marksY).values()
-				.sort(function (object1, object2) {
-					if (object1.value > object2.value) {
-						return 1;
-					} else {
-						return -1;
-					}
-				});
-			this.x = 0;
-			this.y = -100;
-			if (marksYarr1.length > 1) {
-				marksYarr1.forEach(function(mark, index, currentArray) {
-					if (mark.value === number) {
-						if (index === currentArray.length - 1) {
-
-							cy = centrHSVGdescart - currentArray[index - 1].quantity - 50;
-							mark.quantity = currentArray[index - 1].quantity + 50;
-
-						} else {
-							console.log(centrHSVGdescart, currentArray[index + 1].quantity);
-							cy = centrHSVGdescart - currentArray[index + 1].quantity + 50;
-							mark.quantity = currentArray[index + 1].quantity - 50;
-							console.log(cy);
-						}
-					}
-				});
-			} else {
-				cy =centrHSVGdescart - 100;
-				this.quantity = this.y + 200;
-			}
-
-
-
-			console.log(this.quantity);
-			x1 = centrWSVGdescart - 50;
-			x2 = centrWSVGdescart + 50;
-			cx = centrWSVGdescart;
-			y1 = y2 = cy;
-			/*			this.g.append("line")
-			 .attr("x1", centrWSVGdescart - 2000)
-			 .attr("y1", centrHSVGdescart - 100)
-			 .attr("x2", centrWSVGdescart + 2000)
-			 .attr("y2", centrHSVGdescart - 100)
-			 .style({
-			 "stroke": "red",
-			 "opacity": 0.5,
-			 "stroke-width": 0.7
-			 });*/
-
-			this.g.classed("pointy", true)
-		}
-
-
-		this.g.append("line")
-			.attr("x1", x1)
-			.attr("y1", y1)
-			.attr("x2", x2)
-			.attr("y2", y2)
-			.style({
-				"stroke": "red",
-				"stroke-width": 1
-			});
-
-		this.g.append("line")
-			.attr("x1", x1)
-			.attr("y1", y1)
-			.attr("x2", x2)
-			.attr("y2", y2)
-			.style({
-				"stroke": "red",
-				"stroke-width": 1
-			});
-		this.g.append("line")
-			.attr("id", "area")
-			.attr("x1", x1)
-			.attr("y1", y1)
-			.attr("x2", x2)
-			.attr("y2", y2)
-			.style({
-				"stroke": "red",
-				"opacity": 0,
-				"stroke-width": 30
-			});
-
-		this.centr = this.g.append("circle")
-			.attr("id", "zero")
-			.attr("cx", cx)
-			.attr("cy", cy)
-			.attr("r", 1)
-			.style({
-				"stroke": "black",
-				"stroke-width": 2
-			});
-
-
-		if(!this.text) {
-			this.text = this.g.append("text");
-			if (this.axes === 'x') {
-				this.text.attr("x", centrWSVGdescart + cy)
-					.attr("y", centrHSVGdescart + 60)
-			} else {
-				this.text.attr("x", centrWSVGdescart - 65)
-					.attr("y", centrHSVGdescart - 105)
-			}
-		}
-		this.text.text(this.value);
-
-
-
-	} else {
-		this.value = null;
-		this.quantity = null;
-		this.g.remove();
-		this.g = null;
-		this.text.remove();
-		this.text = null;
-	}
-	this.calc();
-};
-
-
-
-
-Mark.prototype.calc = function () {
-
-	range = {
-		'x': [],
-		'y': []
-	};
-	marksXarr = prepareArray(d3.map(marksX).values());
-	marksYarr = prepareArray(d3.map(marksY).values());
-	fillRange(marksXarr);
-	fillRange(marksYarr);
-
-
-	return;
-	var conflictFlag, errorMessage;
-	d3.map(marks).values()
-		.sort(function (object1, object2) {
-			if (object1.quantity > object2.quantity) {
-				return 1;
-			} else {
-				return -1;
-			}
-		})
-		.forEach(function(object, i, array) {
-			if(!i || conflictFlag) return;
-			if(object.value < array[i - 1].value){
-				conflictFlag = true;
-			}
-		});
-
-	if (conflictFlag || (this.value * this.quantity) < 0) {
-		if (conflictFlag) {
-			errorMessage = 'Значения отметок должны быть последовательными';
-		} else {
-			errorMessage = 'Масштаб не может быть отрицательным';
-		}
-		this.resolveConflict (true, errorMessage)
-	} else {
-		this.resolveConflict (false)
-	}
-};
-
-
-Mark.prototype.eng = function (event) {
-	if (this.axes === 'x') {
-		this.quantity += event.dx;
-	} else {
-		this.quantity -= event.dy;
-	}
-	this.calc();
-};
-
-
-
-
-var marksX = {};
-var marksY = {};
-
-
-var range;
-
-
-
-var prepareArray = function (array) {
-	return array.sort(function (object1, object2) {
-		if (object1.value > object2.value) {
-			return 1;
-		} else {
-			return -1;
-		}
-	})
-};
-var minElementArray = function (array) {
-	var minElement = Infinity;
-	array.forEach(function (o) {
-		if (o.quantity < minElement) minElement = o.quantity;
-	});
-	return minElement;
-};
-
-var fillRange = function (array) {
-	var minElement = minElementArray(array);
-	array.forEach(function (mark, index, currentArray) {
-		var quantity, value;
-		if (index !== 0) {
-			value = mark.value - currentArray[index - 1].value;
-			quantity = mark.quantity - currentArray[index - 1].quantity;
-		} else {
-			value = mark.value - +origin[mark.axes].value;
-			quantity = mark.quantity;
-		}
-		var object = {
-			"originalQuantity": mark.quantity,
-			"quantity": quantity,
-			"value": value,
-			"ratio": value / quantity
-		};
-		mark.dQuantity = quantity;
-		if (mark.quantity === minElement) object.offset = +origin[mark.axes].value;
-		range[mark.axes].push(object)
-	})
-};
-
+}*/;
