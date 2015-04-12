@@ -13,6 +13,8 @@ var countMark = {
 	"y": 0
 };
 
+
+var trumen = false;
 var marks = {};
 var points = {};
 
@@ -24,6 +26,7 @@ var svg = d3.select("body")
 	.append("svg")
 	.attr("width", widthSVGdescart)
 	.attr("height", heightSVGdescart);
+
 
 function increaseCanvas () {
 	svg.attr("height", parseInt(svg.attr("height")) + 100)
@@ -82,6 +85,44 @@ descart.append("line")
 		"opacity": 0,
 		"stroke-width": 30
 	});
+
+var flag1;
+svg.on('mousedown', function(){
+	flag1 = 1;
+});
+svg.on('mousemove', function(){
+	flag1 = 0;
+});
+svg.on('mouseup', addPoint);
+
+function addPoint () {
+	if(flag1 === 1 && trumen){
+		var coordinates = d3.mouse(this);
+		var x = coordinates[0] - origin.x.x;
+		var y = centrHSVGdescart - coordinates[1] + centrHSVGdescart - origin.y.y;
+		var ty = true;
+		var arr = d3.map(points).values()
+			;
+		if(arr.length) {
+			ty = !arr.some(function (object1) {
+				console.log(object1.x === x);
+				console.log(x);
+				console.log(object1.x);
+				if (object1.x === x) {
+					return true;
+				}
+			})
+		}
+
+
+		if (ty) {
+			new Point(x, y);
+		}
+	}
+	flag1 = 0;
+}
+
+
 
 var zero = descart.append("circle")
 	.attr("id", "zero")

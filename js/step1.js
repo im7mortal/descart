@@ -2,6 +2,8 @@ var origin = {
 	"x": {},
 	"y": {}
 };
+origin.x.x = centrWSVGdescart;
+origin.y.y = centrHSVGdescart;
 origin.x.originXInput = document.getElementById('originX');
 origin.y.originYInput = document.getElementById('originY');
 origin.x.tipX = document.getElementById('tipX');

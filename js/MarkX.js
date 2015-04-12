@@ -1,4 +1,6 @@
-function MarkX() {
+function MarkX(value, quantity) {
+	this.value = value;
+	this.quantity = quantity;
 	this.init('X');
 }
 
@@ -21,11 +23,11 @@ MarkX.prototype.render = function () {
 		.classed('pointx', true);
 
 	if (this.array.length > 0) {
-		this.quantity = this.ratiy();
+		this.quantity = this.quantity || this.ratiy();
 		x = centrWSVGdescart + this.quantity;
 	} else {
-		this.quantity = 100;
-		x = centrWSVGdescart + 100;
+		this.quantity = this.quantity || 100;
+		x = centrWSVGdescart + this.quantity;
 	}
 
 	this.g.append('line')

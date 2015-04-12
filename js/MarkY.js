@@ -1,4 +1,6 @@
-function MarkY() {
+function MarkY(value, quantity) {
+	this.value = value;
+	this.quantity = quantity;
 	this.init('Y');
 }
 
@@ -20,11 +22,11 @@ MarkY.prototype.render = function () {
 		.classed('pointy', true);
 
 	if (this.array.length > 0) {
-		this.quantity = this.ratiy();
+		this.quantity = this.quantity || this.ratiy();
 		y = centrHSVGdescart - this.quantity;
 	} else {
-		this.quantity = 100;
-		y = centrHSVGdescart - 100;
+		this.quantity = this.quantity || 30;
+		y = centrHSVGdescart - this.quantity;
 	}
 
 	this.g.append('line')

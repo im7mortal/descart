@@ -43,10 +43,18 @@ function getDataPath() {
 	var data = buildDataPath();
 	globalData = data;
 	var csv = "";
-	data.forEach(function(o, i) {
-		var b = rationer(o, i);
-		csv += b.x  + "; " + b.y + "<br>";
-	});
+	d3.map(points).values()
+		.sort(function (object1, object2) {
+			if (object1.x > object2.x) {
+				return 1;
+			} else {
+				return -1;
+			}
+		})
+		.forEach(function (o, i) {
+			var b = o.rationer();
+			csv += b.x + "; " + Math.pow(10, b.x) + "; " + b.y + "<br>";
+		});
 
 	while(csv.indexOf('.') + 1) {
 		csv = csv.replace('.', ',');
