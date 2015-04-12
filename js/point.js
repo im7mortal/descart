@@ -27,7 +27,7 @@ function Point (x , y) {
 		.attr("id", "zero")
 		.attr("cx", cx)
 		.attr("cy", cy)
-		.attr("r", 20)
+		.attr("r", 3)
 		.style({
 			"stroke": "red",
 			"opacity": 0
