@@ -45,7 +45,7 @@
 		}
 	</style>
 </head>
-<body>
+<body id="body">
 
 <div class="container">
 	<div class="row">
@@ -74,6 +74,7 @@
 		<div class="col-md-3">
 			<button class="btn btn-default btn-block" onclick="fasten(this.name)" name="descart">Зафиксировать систему координат</button>
 			<button class="btn btn-default btn-block" onclick="fasten(this.name)" name="graph">Зафиксировать график</button>
+			<button class="btn btn-default btn-block" onclick="trumen = !trumen" name="graph">Рисовать точки</button>
 		</div>
 		<div class="col-md-3">
 			<button class="btn btn-default btn-block" onclick="new MarkX()">Добавить отметку X</button>
@@ -97,6 +98,7 @@
 	<button onclick="renderGraph()">Построить график</button>
 	<button onclick="increaseCanvas()">Увеличить область построения</button>
 	<button onclick="test()">TEST</button>
+	<button onclick="test2()">TEST2</button>
 </div>
 
 <script src="js/js.js"></script>
@@ -126,24 +128,41 @@
 
 <script>
 	function test() {
-		origin.x.originXInput.value = 50;
-		origin.y.originYInput.value = 50;
+		origin.x.originXInput.value = 0.3;
+		origin.y.originYInput.value = 7;
 		origin.x.originXInput.onchange();
 		origin.y.originYInput.onchange();
-		var x1 = new MarkX();
-		x1.input.value = 100;
-		x1.input.onchange();
-		var y1 = new MarkY();
-		y1.input.value = 100;
-		y1.input.onchange();
-		var x2 = new MarkX();
-		x2.input.value = 200;
-		x2.input.onchange();
-		var y2 = new MarkY();
-		y2.input.value = 200;
-		y2.input.onchange();
-
+		var testArray = [0.4,0.5,0.6,0.7,0.8,0.9,1];
+		testArray.forEach(function (a) {
+			var x1 = new MarkX();
+			x1.input.value = a;
+			x1.input.onchange();
+		});
+		testArray = [8,9,10];
+		testArray.forEach(function (a) {
+			var x1 = new MarkY();
+			x1.input.value = a;
+			x1.input.onchange();
+		});
+			svg.attr("height", parseInt(svg.attr("height")) + 700)
 	}
+/*
+	function test2() {
+		var testArray = [2,2.5];
+		testArray.forEach(function (a) {
+			var x1 = new MarkX();
+			x1.input.value = a;
+			x1.input.onchange();
+		});
+		testArray = [20,30];
+		testArray.forEach(function (a) {
+			var x1 = new MarkY();
+			x1.input.value = a;
+			x1.input.onchange();
+		});
+			svg.attr("height", parseInt(svg.attr("height")) + 500)
+	}
+*/
 </script>
 
 

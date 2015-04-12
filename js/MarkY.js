@@ -1,5 +1,9 @@
-function MarkY() {
+function MarkY(value, quantity) {
 	this.init('Y');
+	/*if (value && quantity) {
+		this.value = value;
+		this.quantity = quantity;
+	}*/
 }
 
 MarkY.prototype = Object.create(Mark.prototype);
@@ -23,8 +27,8 @@ MarkY.prototype.render = function () {
 		this.quantity = this.ratiy();
 		y = centrHSVGdescart - this.quantity;
 	} else {
-		this.quantity = 100;
-		y = centrHSVGdescart - 100;
+		this.quantity = 30;
+		y = centrHSVGdescart - 30;
 	}
 
 	this.g.append('line')

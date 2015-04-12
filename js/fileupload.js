@@ -2,7 +2,7 @@ var fileInput = document.getElementById("fileInput");
 fileInput.addEventListener("change", function () {
 	if (this.files.length) {
 		graph = svg.insert("image", 'g#descart')
-			.classed("descart", true)
+			.classed("gap", true)
 			.attr("xlink:href", this.files[0].name)
 			.attr("x", 0)
 			.attr("y", 0);

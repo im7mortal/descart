@@ -1,17 +1,19 @@
-function Point () {
+function Point (x , y) {
 	this.name = "point" + countPoints++;
 	points[this.name] = this;
 	var self = this;
+
+
+	this.x = x || 20;
+	this.y = y || 20;
 
 	this.g = descart.append("g")
 		.attr("id", this.name)
 		.classed("point", true);
 
-	var cx = widthSVGdescart / 2 + 20,
-		cy = heightSVGdescart / 2 - 20;
+	var cx = widthSVGdescart / 2 + this.x,
+		cy = heightSVGdescart / 2 - this.y;
 
-	this.x = 20;
-	this.y = 20;
 	this.point = this.g.append("circle")
 		.attr("id", "zero")
 		.attr("cx", cx)
