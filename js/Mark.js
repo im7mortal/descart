@@ -54,7 +54,7 @@ Mark.prototype.handler = function () {
 };
 
 
-Mark.prototype.init = function (value, quantity) {
+Mark.prototype.init = function () {
 	this.name = 'mark' + this.axes + countMark++;
 	this.inputGroup = d3.select('#input' + this.axes)
 		.append('div')
@@ -78,8 +78,9 @@ Mark.prototype.init = function (value, quantity) {
 		.attr('placeholder', 'Search for...')[0][0];
 
 	this.input.onchange = this.handler.bind(this);
-	if(value && quantity) {
-
+	if(this.value && this.quantity) {
+		this.input.value = this.value;
+		this.render();
 	}
 
 };
