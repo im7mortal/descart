@@ -1,0 +1,39 @@
+.axis path,
+.axis line {
+    fill: none;
+    stroke: black;
+    shape-rendering: crispEdges;
+}
+
+.axis text {
+    font-family: sans-serif;
+    font-size: 11px;
+}
+
+#drag-me {
+    width: 25%;
+    height: 100%;
+    margin: 10%;
+
+    background-color: #29e;
+    color: white;
+
+    border-radius: 0.75em;
+    padding: 4%;
+
+    -webkit-transform: translate(0px, 0px);
+    transform: translate(0px, 0px);
+}
+
+#drag-me::before {
+    content: "#" attr(id);
+    font-weight: bold;
+}
+
+svg {
+    float: left;
+    border-bottom: solid 1px #ccc;
+    border-right: solid 1px #ccc;
+    margin-right: -1px;
+    margin-bottom: -1px;
+}

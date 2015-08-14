@@ -1,20 +1,42 @@
 var gulp = require("gulp");
 var babel = require("gulp-babel");
 var concat = require("gulp-concat");
+var jade = require('gulp-jade');
 
-gulp.task("default", function () {
+gulp.task('default', [
+		'jade',
+		'js' ,
+		'css'
+	],
+	function () {
+	});
+
+gulp.task('jade', function () {
+	return gulp.src('dev/*.jade')
+		.pipe(jade())
+		.pipe(gulp.dest(''))
+});
+
+gulp.task("js", function () {
 	return gulp.src([
-		'js/js.js',
-		'js/step1.js',
-		'js/inter.js',
-		'js/fileupload.js',
-		'js/Mark.js',
-		'js/MarkY.js',
-		'js/MarkX.js',
-		'js/point.js',
-		'js/graph.js'
+		'dev/js/js.js',
+		'dev/js/step1.js',
+		'dev/js/inter.js',
+		'dev/js/fileupload.js',
+		'dev/js/Mark.js',
+		'dev/js/MarkY.js',
+		'dev/js/MarkX.js',
+		'dev/js/point.js',
+		'dev/js/graph.js'
 	])
 		.pipe(babel())
 		.pipe(concat("all.js"))
-		.pipe(gulp.dest("public"));
+		.pipe(gulp.dest("public/js"));
+});
+
+gulp.task("css", function () {
+	return gulp.src([
+		'dev/css/descart.css'
+	])
+		.pipe(gulp.dest("public/css"));
 });
