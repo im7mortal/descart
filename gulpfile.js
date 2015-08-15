@@ -27,7 +27,8 @@ gulp.task("js", function () {
 		'dev/js/MarkY.js',
 		'dev/js/MarkX.js',
 		'dev/js/point.js',
-		'dev/js/graph.js'
+		'dev/js/graph.js',
+		'dev/js/testButton.js'
 	])
 		.pipe(babel())
 		.pipe(concat("all.js"))
