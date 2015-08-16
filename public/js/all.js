@@ -31,9 +31,7 @@ function increaseCanvas() {
 
 var zoom = d3.behavior.zoom();
 
-var descartDrag = d3.behavior.drag().on("dragstart", function () {
-	d3.event.sourceEvent.stopPropagation(); // silence other listeners
-}).on('drag', function (d) {
+var descartDrag = d3.behavior.drag().on("dragstart", stopPropagation).on('drag', function (d) {
 	d.x += d3.event.dx;
 	d.y += d3.event.dy;
 	d3.select(this).attr("transform", function () {
@@ -122,6 +120,9 @@ function sign(value) {
 		return 0;
 	}
 }
+function stopPropagation() {
+	d3.event.sourceEvent.stopPropagation(); // silence other listeners
+}
 "use strict";
 
 var origin = {
@@ -130,63 +131,41 @@ var origin = {
 };
 origin.x.x = centrWSVGdescart;
 origin.y.y = centrHSVGdescart;
-origin.x.originXInput = document.getElementById('originX');
-origin.y.originYInput = document.getElementById('originY');
-origin.x.tipX = document.getElementById('tipX');
-origin.y.tipY = document.getElementById('tipY');
-origin.x.originX = descart.append('text').attr('x', centrWSVGdescart - 30).attr('y', centrHSVGdescart + 30).text('');
-origin.y.originY = descart.append('text').attr('x', centrWSVGdescart - 30).attr('y', centrHSVGdescart - 30).text('');
-origin.x.originXInput.onchange = function () {
-	if (this.value && isFinite(this.value)) {
-		origin.x.tipX.style.display = 'none';
-		origin.x.originX.text(this.value);
-		origin.x.value = this.value;
-	} else {
-		origin.x.tipX.style.display = 'block';
-		origin.x.tipX.style.color = 'red';
-		origin.x.tipX.innerHTML = 'Задайте корректное начало отсчета по X';
-		origin.x.originX.text('');
-		origin.x.value = null;
-	}
+origin.x.originInput = document.getElementById('originX');
+origin.y.originInput = document.getElementById('originY');
+origin.x.tip = document.getElementById('tipX');
+origin.y.tip = document.getElementById('tipY');
+origin.x.origin = descart.append('text').attr('x', centrWSVGdescart - 30).attr('y', centrHSVGdescart + 30).text('');
+origin.y.origin = descart.append('text').attr('x', centrWSVGdescart - 30).attr('y', centrHSVGdescart - 30).text('');
+
+var validateAxisInput = function validateAxisInput(object, axis) {
+	return function () {
+		if (this.value && isFinite(this.value)) {
+			object.tip.style.display = 'none';
+			object.origin.text(this.value);
+			object.value = this.value;
+		} else {
+			object.tip.style.display = 'block';
+			object.tip.style.color = 'red';
+			object.tip.innerHTML = 'Задайте корректное начало отсчета по ' + axis;
+			object.origin.text('');
+			object.value = null;
+		}
+	};
 };
-origin.y.originYInput.onchange = function () {
-	if (this.value && isFinite(this.value)) {
-		origin.y.tipY.style.display = 'none';
-		origin.y.originY.text(this.value);
-		origin.y.value = this.value;
-	} else {
-		origin.y.tipY.style.display = 'block';
-		origin.y.tipY.style.color = 'red';
-		origin.y.tipY.innerHTML = 'Задайте корректное начало отсчета по Y';
-		origin.y.originY.text('');
-		origin.y.value = null;
-	}
-};
-var validateAxisInput = function validateAxisInput() {
-	if (this.value && isFinite(this.value)) {
-		origin.y.tipY.style.display = 'none';
-		origin.y.originY.text(this.value);
-		origin.y.value = this.value;
-	} else {
-		origin.y.tipY.style.display = 'block';
-		origin.y.tipY.style.color = 'red';
-		origin.y.tipY.innerHTML = 'Задайте корректное начало отсчета по ' + axe;
-		origin.y.originY.text('');
-		origin.y.value = null;
-	}
-};
-origin.x.originXInput.value = 0;
-origin.x.originXInput.onchange();
-origin.y.originYInput.value = 0;
-origin.y.originYInput.onchange();
+origin.x.originInput.onchange = validateAxisInput(origin.x, 'x');
+origin.y.originInput.onchange = validateAxisInput(origin.y, 'y');
+
+origin.x.originInput.value = 0;
+origin.x.originInput.onchange();
+origin.y.originInput.value = 0;
+origin.y.originInput.onchange();
 "use strict";
 
 var fileInput = document.getElementById("fileInput");
 fileInput.addEventListener("change", function () {
 	if (this.files.length) {
-		var gapDrag = d3.behavior.drag().on("dragstart", function () {
-			d3.event.sourceEvent.stopPropagation(); // silence other listeners
-		}).on('drag', function (d) {
+		var gapDrag = d3.behavior.drag().on("dragstart", stopPropagation).on('drag', function (d) {
 			d.x += d3.event.dx;
 			d.y += d3.event.dy;
 			d3.select(this).attr("transform", function () {
@@ -436,9 +415,7 @@ MarkY.prototype.render = function () {
 	x2 = centrWSVGdescart + 50;
 	cx = centrWSVGdescart;
 
-	var drag = d3.behavior.drag().on("dragstart", function () {
-		d3.event.sourceEvent.stopPropagation(); // silence other listeners
-	}).on('drag', function (d) {
+	var drag = d3.behavior.drag().on("dragstart", stopPropagation).on('drag', function (d) {
 		var mark = getMark(this.id, marks_Y);
 		if (!mark) return;
 
@@ -531,9 +508,7 @@ MarkX.prototype.render = function () {
 	y2 = centrHSVGdescart + 50;
 	cy = centrHSVGdescart;
 
-	var drag = d3.behavior.drag().on("dragstart", function () {
-		d3.event.sourceEvent.stopPropagation(); // silence other listeners
-	}).on('drag', function (d) {
+	var drag = d3.behavior.drag().on("dragstart", stopPropagation).on('drag', function (d) {
 		var mark = getMark(this.id, marks_X);
 		if (!mark) return;
 
@@ -614,9 +589,7 @@ function Point(x, y) {
 	this.x = x || 20;
 	this.y = y || 20;
 
-	var drag = d3.behavior.drag().on("dragstart", function () {
-		d3.event.sourceEvent.stopPropagation(); // silence other listeners
-	}).on('drag', function (d) {
+	var drag = d3.behavior.drag().on("dragstart", stopPropagation).on('drag', function (d) {
 		d.x += d3.event.dx;
 		d.y += d3.event.dy;
 		d3.select(this).attr("transform", function () {

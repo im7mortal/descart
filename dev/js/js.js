@@ -35,9 +35,7 @@ function increaseCanvas () {
 var zoom =  d3.behavior.zoom();
 
 var descartDrag = d3.behavior.drag()
-	.on("dragstart", function() {
-		d3.event.sourceEvent.stopPropagation(); // silence other listeners
-	})
+	.on("dragstart", stopPropagation)
 	.on('drag', function (d) {
 		d.x += d3.event.dx;
 		d.y += d3.event.dy;
@@ -166,4 +164,7 @@ function sign (value) {
 	} else {
 		return(0)
 	}
+}
+function stopPropagation () {
+	d3.event.sourceEvent.stopPropagation(); // silence other listeners
 }

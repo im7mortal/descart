@@ -18,9 +18,7 @@ MarkY.prototype.render = function () {
 	cx = centrWSVGdescart;
 
 	var drag = d3.behavior.drag()
-		.on("dragstart", function() {
-			d3.event.sourceEvent.stopPropagation(); // silence other listeners
-		})
+		.on("dragstart", stopPropagation)
 		.on('drag', function (d) {
 			var mark = getMark(this.id, marks_Y);
 			if (!mark) return;

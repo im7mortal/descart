@@ -8,9 +8,7 @@ function Point (x , y) {
 	this.y = y || 20;
 
 	var drag = d3.behavior.drag()
-		.on("dragstart", function() {
-			d3.event.sourceEvent.stopPropagation(); // silence other listeners
-		})
+		.on("dragstart", stopPropagation)
 		.on('drag', function (d) {
 			d.x += d3.event.dx;
 			d.y += d3.event.dy;

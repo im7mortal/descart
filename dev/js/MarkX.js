@@ -19,9 +19,7 @@ MarkX.prototype.render = function () {
 	cy = centrHSVGdescart;
 
 	var drag = d3.behavior.drag()
-		.on("dragstart", function() {
-			d3.event.sourceEvent.stopPropagation(); // silence other listeners
-		})
+		.on("dragstart", stopPropagation)
 		.on('drag', function (d) {
 			var mark = getMark(this.id, marks_X);
 			if (!mark) return;
