@@ -41,3 +41,8 @@ gulp.task("css", function () {
 	])
 		.pipe(gulp.dest("public/css"));
 });
+
+var watcher = gulp.watch('dev/**', ['default']);
+watcher.on('change', function(event) {
+	console.log('File ' + event.path + ' was ' + event.type + ', running tasks...');
+});
