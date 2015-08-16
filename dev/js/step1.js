@@ -4,45 +4,38 @@ var origin = {
 };
 origin.x.x = centrWSVGdescart;
 origin.y.y = centrHSVGdescart;
-origin.x.originXInput = document.getElementById('originX');
-origin.y.originYInput = document.getElementById('originY');
-origin.x.tipX = document.getElementById('tipX');
-origin.y.tipY = document.getElementById('tipY');
-origin.x.originX = descart.append('text')
+origin.x.originInput = document.getElementById('originX');
+origin.y.originInput = document.getElementById('originY');
+origin.x.tip = document.getElementById('tipX');
+origin.y.tip = document.getElementById('tipY');
+origin.x.origin = descart.append('text')
 	.attr('x', centrWSVGdescart - 30)
 	.attr('y', centrHSVGdescart + 30)
 	.text('');
-origin.y.originY = descart.append('text')
+origin.y.origin = descart.append('text')
 	.attr('x', centrWSVGdescart - 30)
 	.attr('y', centrHSVGdescart -30)
 	.text('');
-origin.x.originXInput.onchange = function () {
-	if(this.value && isFinite(this.value)) {
-		origin.x.tipX.style.display = 'none';
-		origin.x.originX.text(this.value);
-		origin.x.value = this.value;
-	} else {
-		origin.x.tipX.style.display = 'block';
-		origin.x.tipX.style.color = 'red';
-		origin.x.tipX.innerHTML = 'Задайте корректное начало отсчета по X';
-		origin.x.originX.text('');
-		origin.x.value = null;
+
+var validateAxisInput = function (object, axis) {
+	return function () {
+		if(this.value && isFinite(this.value)) {
+			object.tip.style.display = 'none';
+			object.origin.text(this.value);
+			object.value = this.value;
+		} else {
+			object.tip.style.display = 'block';
+			object.tip.style.color = 'red';
+			object.tip.innerHTML = 'Задайте корректное начало отсчета по ' + axis;
+			object.origin.text('');
+			object.value = null;
+		}
 	}
 };
-origin.y.originYInput.onchange = function () {
-	if(this.value && isFinite(this.value)) {
-		origin.y.tipY.style.display = 'none';
-		origin.y.originY.text(this.value);
-		origin.y.value = this.value;
-	} else {
-		origin.y.tipY.style.display = 'block';
-		origin.y.tipY.style.color = 'red';
-		origin.y.tipY.innerHTML = 'Задайте корректное начало отсчета по Y';
-		origin.y.originY.text('');
-		origin.y.value = null;
-	}
-};
-origin.x.originXInput.value = 0;
-origin.x.originXInput.onchange();
-origin.y.originYInput.value = 0;
-origin.y.originYInput.onchange();
+origin.x.originInput.onchange = validateAxisInput(origin.x, 'x');
+origin.y.originInput.onchange = validateAxisInput(origin.y, 'y');
+
+origin.x.originInput.value = 0;
+origin.x.originInput.onchange();
+origin.y.originInput.value = 0;
+origin.y.originInput.onchange();

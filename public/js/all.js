@@ -162,6 +162,19 @@ origin.y.originYInput.onchange = function () {
 		origin.y.value = null;
 	}
 };
+var validateAxisInput = function validateAxisInput() {
+	if (this.value && isFinite(this.value)) {
+		origin.y.tipY.style.display = 'none';
+		origin.y.originY.text(this.value);
+		origin.y.value = this.value;
+	} else {
+		origin.y.tipY.style.display = 'block';
+		origin.y.tipY.style.color = 'red';
+		origin.y.tipY.innerHTML = 'Задайте корректное начало отсчета по ' + axe;
+		origin.y.originY.text('');
+		origin.y.value = null;
+	}
+};
 origin.x.originXInput.value = 0;
 origin.x.originXInput.onchange();
 origin.y.originYInput.value = 0;
@@ -828,10 +841,10 @@ function renderGraph() {
 "use strict";
 
 function test() {
-	origin.x.originXInput.value = 0.3;
-	origin.y.originYInput.value = 7;
-	origin.x.originXInput.onchange();
-	origin.y.originYInput.onchange();
+	origin.x.originInput.value = 0.3;
+	origin.y.originInput.value = 7;
+	origin.x.originInput.onchange();
+	origin.y.originInput.onchange();
 	var testArray = [{ "val": 8, "q": 36 }, { "val": 9, "q": 74 }, { "val": 10, "q": 102 }, { "val": 20, "q": 310 }, { "val": 30, "q": 427.79999999999995 }, { "val": 40, "q": 513.0599999999998 }, { "val": 50, "q": 576.0019999999995 }, { "val": 60, "q": 629.3033999999989 }, { "val": 70, "q": 673.150668833331 }, { "val": 80, "q": 714.6910258499955 }, { "val": 90, "q": 748.6096327783251 }, { "val": 100, "q": 779.6712645564854 }, { "val": 150, "q": 900.022565691999 }, { "val": 180, "q": 953.082528532279 }];
 	testArray.forEach(function (a) {
 		new MarkY(a.val, a.q);
