@@ -17,8 +17,29 @@ MarkY.prototype.render = function () {
 	x2 = centrWSVGdescart + 50;
 	cx = centrWSVGdescart;
 
+	var drag = d3.behavior.drag()
+		.on("dragstart", function() {
+			d3.event.sourceEvent.stopPropagation(); // silence other listeners
+		})
+		.on('drag', function (d) {
+			var mark = getMark(this.id, marks_Y);
+			if (!mark) return;
+
+			d3.event.dy = 1 * sign(d3.event.dy);
+			d3.event.dy = mark.accelerator(d3.event.dy);
+			if (d3.event.dy === 0) return;
+			d.y += d3.event.dy;
+			mark.quantity -= d3.event.dy;
+			mark.calc();
+			d3.select(this).attr("transform", function () {
+				return "translate(" + [0, d.y] + ")"
+			});
+		});
+
 	this.g = descart.append('g')
 		.attr('id', this.name)
+		.data([{x : 1, y: 1}]) // smock заглушка
+		.call(drag)
 		.classed('pointy', true);
 
 	if (this.array.length > 0) {
@@ -98,28 +119,3 @@ MarkY.prototype.accelerator = function (quantity) {
 	}, this);
 	return quantity;
 };
-
-interact('.pointy')
-	.draggable({
-		onmove: function (event) {
-			var target = event.target;
-
-			var mark = getMark(target.id, marks_Y);
-			if (!mark) return;
-			event.dy = 1 * sign(event.dy);
-			if (event.dy === 0) return;
-			event.dy = mark.accelerator(event.dy);
-			mark.quantity -= event.dy;
-			mark.calc();
-
-			var x = 0,
-				y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
-			target.style.webkitTransform =
-				target.style.transform =
-					'translate(' + x + 'px, ' + y + 'px)';
-			target.setAttribute('data-x', x);
-			target.setAttribute('data-y', y);
-		},
-		onend: function (event) {
-		}
-	});

@@ -21,7 +21,6 @@ gulp.task("js", function () {
 	return gulp.src([
 		'dev/js/js.js',
 		'dev/js/step1.js',
-		'dev/js/inter.js',
 		'dev/js/fileupload.js',
 		'dev/js/Mark.js',
 		'dev/js/MarkY.js',

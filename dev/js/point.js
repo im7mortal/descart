@@ -7,8 +7,24 @@ function Point (x , y) {
 	this.x = x || 20;
 	this.y = y || 20;
 
+	var drag = d3.behavior.drag()
+		.on("dragstart", function() {
+			d3.event.sourceEvent.stopPropagation(); // silence other listeners
+		})
+		.on('drag', function (d) {
+			d.x += d3.event.dx;
+			d.y += d3.event.dy;
+			d3.select(this).attr("transform", function () {
+				return "translate(" + [d.x, d.y] + ")"
+			});
+			points[this.id].eng(d3.event);
+			autoRender();
+		});
+
 	this.g = descart.append("g")
 		.attr("id", this.name)
+		.data([{x : 1, y: 1}]) // smock заглушка
+		.call(drag)
 		.classed("point", true);
 
 	var cx = widthSVGdescart / 2 + this.x,

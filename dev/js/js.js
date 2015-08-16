@@ -34,10 +34,24 @@ function increaseCanvas () {
 
 var zoom =  d3.behavior.zoom();
 
-
+var descartDrag = d3.behavior.drag()
+	.on("dragstart", function() {
+		d3.event.sourceEvent.stopPropagation(); // silence other listeners
+	})
+	.on('drag', function (d) {
+		d.x += d3.event.dx;
+		d.y += d3.event.dy;
+		d3.select(this).attr("transform", function () {
+			return "translate(" + [d.x, d.y] + ")"
+		});
+		origin.x.x +=  d3.event.dx;
+		origin.y.y -=  d3.event.dy;
+	});
 
 var descart = svg.append("g")
 	.attr("id", "descart")
+	.data([{x : 1, y: 1}]) // smock заглушка
+	.call(descartDrag)
 	.classed("descart", true);
 
 

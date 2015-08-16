@@ -1,8 +1,21 @@
 var fileInput = document.getElementById("fileInput");
 fileInput.addEventListener("change", function () {
 	if (this.files.length) {
+		var gapDrag = d3.behavior.drag()
+			.on("dragstart", function() {
+				d3.event.sourceEvent.stopPropagation(); // silence other listeners
+			})
+			.on('drag', function (d) {
+				d.x += d3.event.dx;
+				d.y += d3.event.dy;
+				d3.select(this).attr("transform", function () {
+					return "translate(" + [d.x, d.y] + ")"
+				});
+			});
 		graph = svg.insert("image", 'g#descart')
 			.classed("gap", true)
+			.data([{x : 1, y: 1}]) // smock заглушка
+			.call(gapDrag)
 			.attr("xlink:href", this.files[0].name)
 			.attr("x", 0)
 			.attr("y", 0);
