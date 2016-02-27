@@ -1,7 +1,8 @@
 var widthSVGdescart = document.body.clientWidth;
-var heightSVGdescart = screen.height * 0.75;
-var centrHSVGdescart = screen.height * 0.75 / 2;
+var heightSVGdescart = 2000;
+var centrHSVGdescart = 1000;
 var centrWSVGdescart = document.body.clientWidth / 2;
+// freeze
 var fastenFlag = {
 	"graph": true,
 	"descart": true
@@ -28,11 +29,11 @@ var svg = d3.select("body")
 	.attr("height", heightSVGdescart);
 
 
-function increaseCanvas () {
+function increaseCanvas() {
 	svg.attr("height", parseInt(svg.attr("height")) + 100)
 }
 
-var zoom =  d3.behavior.zoom();
+var zoom = d3.behavior.zoom();
 
 var descartDrag = d3.behavior.drag()
 	.on("dragstart", stopPropagation)
@@ -42,16 +43,15 @@ var descartDrag = d3.behavior.drag()
 		d3.select(this).attr("transform", function () {
 			return "translate(" + [d.x, d.y] + ")"
 		});
-		origin.x.x +=  d3.event.dx;
-		origin.y.y -=  d3.event.dy;
+		origin.x.x += d3.event.dx;
+		origin.y.y -= d3.event.dy;
 	});
 
 var descart = svg.append("g")
 	.attr("id", "descart")
-	.data([{x : 1, y: 1}]) // smock заглушка
+	.data([{x: 1, y: 1}]) // smock заглушка
 	.call(descartDrag)
 	.classed("descart", true);
-
 
 
 descart.append("line")
@@ -99,23 +99,23 @@ descart.append("line")
 	});
 
 var flag1;
-svg.on('mousedown', function(){
+svg.on('mousedown', function () {
 	flag1 = 1;
 });
-svg.on('mousemove', function(){
+svg.on('mousemove', function () {
 	flag1 = 0;
 });
 svg.on('mouseup', addPoint);
 
-function addPoint () {
-	if(flag1 === 1 && trumen){
+function addPoint() {
+	if (flag1 === 1 && trumen) {
 		var coordinates = d3.mouse(this);
 		var x = coordinates[0] - origin.x.x;
 		var y = centrHSVGdescart - coordinates[1] + centrHSVGdescart - origin.y.y;
 		var ty = true;
 		var arr = d3.map(points).values()
 			;
-		if(arr.length) {
+		if (arr.length) {
 			ty = !arr.some(function (object1) {
 				console.log(object1.x === x);
 				console.log(x);
@@ -135,7 +135,6 @@ function addPoint () {
 }
 
 
-
 var zero = descart.append("circle")
 	.attr("id", "zero")
 	.attr("cx", centrWSVGdescart)
@@ -151,20 +150,19 @@ var marksGroup = descart.append("g")
 	.attr("id", "marksGroup");
 
 
-
-function fasten (name) {
-	if(name === "descart")descart.classed("descart", fastenFlag[name] = !fastenFlag[name]);
-	if(name === "graph")graph.classed("descart", fastenFlag[name] = !fastenFlag[name]);
+function fasten(name) {
+	if (name === "descart")descart.classed("descart", fastenFlag[name] = !fastenFlag[name]);
+	if (name === "graph")graph.classed("descart", fastenFlag[name] = !fastenFlag[name]);
 }
-function sign (value) {
+function sign(value) {
 	if (value > 0) {
-		return(1)
+		return (1)
 	} else if (value < 0) {
-		return(-1)
+		return (-1)
 	} else {
-		return(0)
+		return (0)
 	}
 }
-function stopPropagation () {
+function stopPropagation() {
 	d3.event.sourceEvent.stopPropagation(); // silence other listeners
 }
