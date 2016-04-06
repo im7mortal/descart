@@ -69,7 +69,7 @@ function getDataPath() {
 	var global = {};
 	global.l = "1000000000000000000";
 	global.data = obj;
-	global.csv = csv;
+	//global.csv = csv;
 
 	document.getElementById('csv').innerHTML = JSON.stringify(global);
 	return data
