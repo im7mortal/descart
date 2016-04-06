@@ -43,6 +43,9 @@ function getDataPath() {
 	var data = buildDataPath();
 	globalData = data;
 	var csv = "";
+	var csv2 = "";
+	var obj = [];
+
 	d3.map(points).values()
 		.sort(function (object1, object2) {
 			if (object1.x > object2.x) {
@@ -53,14 +56,22 @@ function getDataPath() {
 		})
 		.forEach(function (o, i) {
 			var b = o.rationer();
-			csv += b.x + "; " + Math.pow(10, b.x) + "; " + b.y + "<br>";
+			csv2 += b.x + "; " + Math.pow(10, b.x) + "; " + b.y + "<br>";
+
+			csv += b.x + "; " + b.y + "\r\n";
+			obj.push([b.x, b.y])
 		});
 
 	while(csv.indexOf('.') + 1) {
 		csv = csv.replace('.', ',');
 	}
 	//console.log(csv);
-	document.getElementById('csv').innerHTML = csv;
+	var global = {};
+	global.l = "1000000000000000000";
+	global.data = obj;
+	global.csv = csv;
+
+	document.getElementById('csv').innerHTML = JSON.stringify(global);
 	return data
 }
 

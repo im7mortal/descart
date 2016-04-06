@@ -104,10 +104,6 @@ Point.prototype.rationer = function () {
 
 	this.valueX = X;
 	this.valueY = Y;
-console.log({
-	"x": X,
-	"y": Y
-});
 	return {
 		"x": X,
 		"y": Y

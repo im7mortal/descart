@@ -102,13 +102,18 @@ var flag1;
 svg.on('mousedown', function () {
 	flag1 = 1;
 });
-svg.on('mousemove', function () {
-	flag1 = 0;
-});
-svg.on('mouseup', addPoint);
+var r;
+svg.on('mousemove', addPoint);
+svg.on('mouseup', click);
 
+
+function click () {
+		r = !r;
+}
 function addPoint() {
-	if (flag1 === 1 && trumen) {
+		if (!r) return;
+		if (trumen) {
+			
 		var coordinates = d3.mouse(this);
 		var x = coordinates[0] - origin.x.x;
 		var y = centrHSVGdescart - coordinates[1] + centrHSVGdescart - origin.y.y;
@@ -117,9 +122,6 @@ function addPoint() {
 			;
 		if (arr.length) {
 			ty = !arr.some(function (object1) {
-				console.log(object1.x === x);
-				console.log(x);
-				console.log(object1.x);
 				if (object1.x === x) {
 					return true;
 				}
