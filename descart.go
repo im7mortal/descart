@@ -20,7 +20,7 @@ type graph struct {
 }
 
 func main()  {
-	arr := []string{"1.1","1.6","2","2.5"}
+	arr := []string{"1.1","1.6","2","2.5","5"}
 	arrT := []data{}
 	for _, W := range arr{
 
