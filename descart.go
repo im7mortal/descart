@@ -19,10 +19,13 @@ type data struct  {
 
 type graph struct {
 	L int  `json:"l"`
+	base float64  `json:"l"`
+	pow  float64  `json:"l"`
 	Data [][2]float64 `json:"data"`
 }
 
 func main()  {
+	fmt.Printf("%s",strconv.FormatFloat(float64(0), 'f', 0, 64))
 	arr := []string{"1.1","1.6","2","2.5","5"}
 	arrT := []data{}
 	for _, W := range arr{
@@ -46,6 +49,7 @@ func main()  {
 		for _, b := range o.Data{
 			var S1, S2, S3, S4 float64
 			for _, r := range b.Data{
+				r[0] = math.Pow(float64(10), r[0])
 				s1 := math.Log10(r[0])
 				S1 += s1
 				S2 += s1 * s1
@@ -58,13 +62,17 @@ func main()  {
 			a1 := (n * S4 - S1*S3)/(n * S2 - S1 * S1)
 
 			l := math.Pow(float64(10), a0)
+			b.base = l
+			b.pow = a1
 
+			/*
 			fmt.Printf("w=%s, l=%s, %s*x^%s\n",
 				strconv.FormatFloat(float64(o.W), 'f', 3, 64),
 				strconv.FormatFloat(float64(b.L), 'f', 3, 64),
 				strconv.FormatFloat(l, 'f', 3, 64),
 				strconv.FormatFloat(a1, 'f', 3, 64),
 			)
+			*/
 
 		}
 	}
