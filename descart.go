@@ -3,6 +3,9 @@ package main
 import (
 	"os"
 	"encoding/json"
+	"math"
+	"fmt"
+	"strconv"
 )
 
 type jsonT struct  {
@@ -35,4 +38,44 @@ func main()  {
 	defer file.Close()
 	reader := json.NewEncoder(file)
 	reader.Encode(&arrT)
+
+
+
+
+	for _, o := range arrT{
+		for _, b := range o.Data{
+			var S1, S2, S3, S4 float64
+			for _, r := range b.Data{
+				s1 := math.Log10(r[0])
+				S1 += s1
+				S2 += s1 * s1
+				s3 := math.Log10(r[1])
+				S3 += s3
+				S4 += s1 * s3
+			}
+			n := float64(len(b.Data))
+			a0 := (S3*S2 - S4*S1)/(n * S2 - S1 * S1)
+			a1 := (n * S4 - S1*S3)/(n * S2 - S1 * S1)
+
+			l := math.Pow(float64(10), a0)
+
+			fmt.Printf("w=%s, l=%s, %s*x^%s\n",
+				strconv.FormatFloat(float64(o.W), 'f', 3, 64),
+				strconv.FormatFloat(float64(b.L), 'f', 3, 64),
+				strconv.FormatFloat(l, 'f', 3, 64),
+				strconv.FormatFloat(a1, 'f', 3, 64),
+			)
+
+		}
+	}
+
+
+
+}
+
+func Appr(arr [][2]float64) (x, y float64){
+
+
+
+	return
 }
