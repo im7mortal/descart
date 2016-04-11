@@ -4,7 +4,7 @@ import (
 	"os"
 	"encoding/json"
 	"math"
-	"fmt"
+	//"fmt"
 	"strconv"
 )
 
@@ -25,7 +25,20 @@ type graph struct {
 }
 
 func main()  {
-	fmt.Printf("%s\n",strconv.FormatFloat(float64(0), 'f', 0, 64))
+	//fmt.Printf("%s\n",strconv.FormatFloat(float64(0), 'f', 0, 64))
+	println("        200",
+	"     250",
+	"     300",
+	"     400",
+	"    500",
+	"    600",
+	"    700",
+	"    800",
+	"    1000",
+	"   1250",
+	"   1500",
+	"   1750",
+	"   2000")
 	arr := []string{"1.1","1.6","2","2.5","5"}
 	arrT := []data{}
 	for _, W := range arr{
