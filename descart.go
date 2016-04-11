@@ -25,7 +25,7 @@ type graph struct {
 }
 
 func main()  {
-	fmt.Printf("%s",strconv.FormatFloat(float64(0), 'f', 0, 64))
+	fmt.Printf("%s\n",strconv.FormatFloat(float64(0), 'f', 0, 64))
 	arr := []string{"1.1","1.6","2","2.5","5"}
 	arrT := []data{}
 	for _, W := range arr{
@@ -46,44 +46,51 @@ func main()  {
 
 
 	for _, o := range arrT{
-		for _, b := range o.Data{
-			var S1, S2, S3, S4 float64
-			for _, r := range b.Data{
-				r[0] = math.Pow(float64(10), r[0])
-				s1 := math.Log10(r[0])
-				S1 += s1
-				S2 += s1 * s1
-				s3 := math.Log10(r[1])
-				S3 += s3
-				S4 += s1 * s3
-			}
-			n := float64(len(b.Data))
-			a0 := (S3*S2 - S4*S1)/(n * S2 - S1 * S1)
-			a1 := (n * S4 - S1*S3)/(n * S2 - S1 * S1)
 
-			l := math.Pow(float64(10), a0)
-			b.base = l
-			b.pow = a1
+		str := "" + strconv.FormatFloat(o.W, 'f', 3, 64) + "   "
+		for _, obj := range o.Data{
 
-			/*
-			fmt.Printf("w=%s, l=%s, %s*x^%s\n",
+			a, b := Appr(obj.Data)
+			obj.base = a
+			obj.pow = b
+
+/*			fmt.Printf("w=%s, l=%s, %s*x^%s\n",
 				strconv.FormatFloat(float64(o.W), 'f', 3, 64),
-				strconv.FormatFloat(float64(b.L), 'f', 3, 64),
-				strconv.FormatFloat(l, 'f', 3, 64),
-				strconv.FormatFloat(a1, 'f', 3, 64),
-			)
-			*/
-
+				strconv.FormatFloat(float64(obj.L), 'f', 3, 64),
+				strconv.FormatFloat(a, 'f', 3, 64),
+				strconv.FormatFloat(b, 'f', 3, 64),
+			)*/
+			//str += strconv.FormatFloat(obj.pow, 'f', 3, 64) + "  "
+			str += strconv.FormatFloat(obj.base, 'f', 3, 64) + "  "
 		}
+
+
+	println(str)
 	}
 
 
-
+	
 }
 
-func Appr(arr [][2]float64) (x, y float64){
 
+/**
+a is coefficient of x
+b is power of x
+ */
 
-
+func Appr(arr [][2]float64) (a, b float64){
+	var S1, S2, S3, S4 float64
+	for _, r := range arr{
+		r[0] = math.Pow(float64(10), r[0])
+		s1 := math.Log10(r[0])
+		S1 += s1
+		S2 += s1 * s1
+		s3 := math.Log10(r[1])
+		S3 += s3
+		S4 += s1 * s3
+	}
+	n := float64(len(arr))
+	a = math.Pow(float64(10), (S3*S2 - S4*S1)/(n * S2 - S1 * S1))
+	b = (n * S4 - S1*S3)/(n * S2 - S1 * S1)
 	return
 }
