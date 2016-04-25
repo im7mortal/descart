@@ -1,0 +1,429 @@
+
+  Performance statistics for Boeing sparse solver: icalls =      1
+
+ ===========================
+ = multifrontal statistics =
+ ===========================
+
+     number of equations                     =           87939
+     no. of nonzeroes in lower triangle of a =         3103431
+     number of compressed nodes              =           29179
+     no. of compressed nonzeroes in l. tri.  =          333000
+     amount of workspace currently in use    =        36515862
+     max. amt. of workspace used             =        59738140
+     no. of nonzeroes in the factor l        =        28681491.
+     number of super nodes                   =            3286
+     number of compressed subscripts         =          495792
+     size of stack storage                   =         2002059
+     maximum order of a front matrix         =            1614
+     maximum size of a front matrix          =         1303305
+     maximum size of a front trapezoid       =          101216
+     no. of floating point ops for factor    =      1.7132D+10
+     no. of floating point ops for solve     =      9.5046D+07
+     actual no. of nonzeroes in the factor l =        28681491.
+     actual number of compressed subscripts  =          495792
+     actual size of stack storage used       =         2135910
+     near zero pivot monitoring activated
+     number of pivots adjusted               =              0.
+     negative pivot monitoring activated
+     number of negative pivots encountered   =              0.
+     factorization panel size                =              64
+     factorization update panel size         =              32
+     solution block size                     =               2
+     number of cores used                    =               2
+     time (cpu & wall) for structure input   =        1.812500        3.384087
+     time (cpu & wall) for ordering          =        4.265625        7.173278
+     time (cpu & wall) for symbolic factor   =        0.187500        0.239646
+     time (cpu & wall) for value input       =        2.593750        4.226200
+     time (cpu & wall) for numeric factor    =       17.656250       23.117368
+     computational rate (mflops) for factor  =      970.290840      741.074732
+     condition number estimate               =      0.0000D+00
+     time (cpu & wall) for numeric solve     =        0.281250        0.534436
+     computational rate (mflops) for solve   =      337.940640      177.843261
+     effective I/O rate (MB/sec) for solve   =     1287.553819      677.582814
+
+     no input or output performed
+
+
+
+
+  Performance statistics for Boeing sparse solver: icalls =      2
+
+ ===========================
+ = multifrontal statistics =
+ ===========================
+
+     number of equations                     =           87939
+     no. of nonzeroes in lower triangle of a =         3090292
+     number of compressed nodes              =           29177
+     no. of compressed nonzeroes in l. tri.  =          331578
+     amount of workspace currently in use    =        35932755
+     max. amt. of workspace used             =        59738138
+     no. of nonzeroes in the factor l        =        28133523.
+     number of super nodes                   =            3281
+     number of compressed subscripts         =          491386
+     size of stack storage                   =         2231535
+     maximum order of a front matrix         =            1611
+     maximum size of a front matrix          =         1298466
+     maximum size of a front trapezoid       =          101024
+     no. of floating point ops for factor    =      1.6398D+10
+     no. of floating point ops for solve     =      9.2829D+07
+     actual no. of nonzeroes in the factor l =        28133523.
+     actual number of compressed subscripts  =          491386
+     actual size of stack storage used       =         2369457
+     near zero pivot monitoring activated
+     number of pivots adjusted               =              0.
+     negative pivot monitoring activated
+     number of negative pivots encountered   =              0.
+     factorization panel size                =              64
+     factorization update panel size         =              32
+     solution block size                     =               2
+     number of cores used                    =               2
+     time (cpu & wall) for structure input   =        1.531250        2.479903
+     time (cpu & wall) for ordering          =        4.500000        7.106268
+     time (cpu & wall) for symbolic factor   =        0.187500        0.363194
+     time (cpu & wall) for value input       =        2.093750        3.393467
+     time (cpu & wall) for numeric factor    =       15.531250       20.894603
+     computational rate (mflops) for factor  =     1055.821550      784.806881
+     condition number estimate               =      0.0000D+00
+     time (cpu & wall) for numeric solve     =        0.500000        0.840040
+     computational rate (mflops) for solve   =      185.658362      110.505702
+     effective I/O rate (MB/sec) for solve   =      707.358349      421.026719
+
+     no input or output performed
+
+
+
+
+  Performance statistics for Boeing sparse solver: icalls =      3
+
+ ===========================
+ = multifrontal statistics =
+ ===========================
+
+     number of equations                     =           87939
+     no. of nonzeroes in lower triangle of a =         3084645
+     number of compressed nodes              =           29177
+     no. of compressed nonzeroes in l. tri.  =          330950
+     amount of workspace currently in use    =        36273158
+     max. amt. of workspace used             =        59738142
+     no. of nonzeroes in the factor l        =        28480146.
+     number of super nodes                   =            3293
+     number of compressed subscripts         =          493885
+     size of stack storage                   =         2360169
+     maximum order of a front matrix         =            1761
+     maximum size of a front matrix          =         1551441
+     maximum size of a front trapezoid       =          110624
+     no. of floating point ops for factor    =      1.7147D+10
+     no. of floating point ops for solve     =      9.6244D+07
+     actual no. of nonzeroes in the factor l =        28480146.
+     actual number of compressed subscripts  =          493885
+     actual size of stack storage used       =         2491113
+     near zero pivot monitoring activated
+     number of pivots adjusted               =              0.
+     negative pivot monitoring activated
+     number of negative pivots encountered   =              0.
+     factorization panel size                =              64
+     factorization update panel size         =              32
+     solution block size                     =               2
+     number of cores used                    =               2
+     time (cpu & wall) for structure input   =        1.531250        2.355929
+     time (cpu & wall) for ordering          =        4.703125        7.660890
+     time (cpu & wall) for symbolic factor   =        0.156250        0.297316
+     time (cpu & wall) for value input       =        2.281250        4.631950
+     time (cpu & wall) for numeric factor    =       17.531250       23.892797
+     computational rate (mflops) for factor  =      978.083250      717.664899
+     condition number estimate               =      0.0000D+00
+     time (cpu & wall) for numeric solve     =        0.500000        0.880307
+     computational rate (mflops) for solve   =      192.487530      109.329743
+     effective I/O rate (MB/sec) for solve   =      733.377478      416.546316
+
+     no input or output performed
+
+
+
+
+  Performance statistics for Boeing sparse solver: icalls =      4
+
+ ===========================
+ = multifrontal statistics =
+ ===========================
+
+     number of equations                     =           87939
+     no. of nonzeroes in lower triangle of a =         3083558
+     number of compressed nodes              =           29176
+     no. of compressed nonzeroes in l. tri.  =          330535
+     amount of workspace currently in use    =        35701118
+     max. amt. of workspace used             =        59738138
+     no. of nonzeroes in the factor l        =        27926226.
+     number of super nodes                   =            3270
+     number of compressed subscripts         =          485980
+     size of stack storage                   =         2163225
+     maximum order of a front matrix         =            1584
+     maximum size of a front matrix          =         1255320
+     maximum size of a front trapezoid       =           99296
+     no. of floating point ops for factor    =      1.6101D+10
+     no. of floating point ops for solve     =      9.2310D+07
+     actual no. of nonzeroes in the factor l =        27926226.
+     actual number of compressed subscripts  =          485980
+     actual size of stack storage used       =         2299401
+     near zero pivot monitoring activated
+     number of pivots adjusted               =              0.
+     negative pivot monitoring activated
+     number of negative pivots encountered   =              0.
+     factorization panel size                =              64
+     factorization update panel size         =              32
+     solution block size                     =               2
+     number of cores used                    =               2
+     time (cpu & wall) for structure input   =        1.640625        2.648906
+     time (cpu & wall) for ordering          =        4.656250        6.849337
+     time (cpu & wall) for symbolic factor   =        0.171875        0.290512
+     time (cpu & wall) for value input       =        2.000000        2.849588
+     time (cpu & wall) for numeric factor    =       15.968750       20.271667
+     computational rate (mflops) for factor  =     1008.259636      794.243794
+     condition number estimate               =      0.0000D+00
+     time (cpu & wall) for numeric solve     =        0.390625        0.765128
+     computational rate (mflops) for solve   =      236.313644      120.646577
+     effective I/O rate (MB/sec) for solve   =      900.354968      459.663453
+
+     no input or output performed
+
+
+
+
+  Performance statistics for Boeing sparse solver: icalls =      5
+
+ ===========================
+ = multifrontal statistics =
+ ===========================
+
+     number of equations                     =           87939
+     no. of nonzeroes in lower triangle of a =         3083410
+     number of compressed nodes              =           29173
+     no. of compressed nonzeroes in l. tri.  =          330173
+     amount of workspace currently in use    =        36187644
+     max. amt. of workspace used             =        59738140
+     no. of nonzeroes in the factor l        =        28390917.
+     number of super nodes                   =            3315
+     number of compressed subscripts         =          496916
+     size of stack storage                   =         2533611
+     maximum order of a front matrix         =            1677
+     maximum size of a front matrix          =         1407003
+     maximum size of a front trapezoid       =          105248
+     no. of floating point ops for factor    =      1.7022D+10
+     no. of floating point ops for solve     =      9.3768D+07
+     actual no. of nonzeroes in the factor l =        28390917.
+     actual number of compressed subscripts  =          496916
+     actual size of stack storage used       =         2671245
+     near zero pivot monitoring activated
+     number of pivots adjusted               =              0.
+     negative pivot monitoring activated
+     number of negative pivots encountered   =              0.
+     factorization panel size                =              64
+     factorization update panel size         =              32
+     solution block size                     =               2
+     number of cores used                    =               2
+     time (cpu & wall) for structure input   =        1.531250        2.532225
+     time (cpu & wall) for ordering          =        4.671875        7.064717
+     time (cpu & wall) for symbolic factor   =        0.203125        0.213856
+     time (cpu & wall) for value input       =        2.171875        3.476552
+     time (cpu & wall) for numeric factor    =       16.312500       20.637517
+     computational rate (mflops) for factor  =     1043.476067      824.794146
+     condition number estimate               =      0.0000D+00
+     time (cpu & wall) for numeric solve     =        0.515625        0.824523
+     computational rate (mflops) for solve   =      181.852426      113.723498
+     effective I/O rate (MB/sec) for solve   =      692.857731      433.286519
+
+     no input or output performed
+
+
+
+
+  Performance statistics for Boeing sparse solver: icalls =      6
+
+ ===========================
+ = multifrontal statistics =
+ ===========================
+
+     number of equations                     =           87939
+     no. of nonzeroes in lower triangle of a =         3084226
+     number of compressed nodes              =           29173
+     no. of compressed nonzeroes in l. tri.  =          330172
+     amount of workspace currently in use    =        36096593
+     max. amt. of workspace used             =        59738139
+     no. of nonzeroes in the factor l        =        28301450.
+     number of super nodes                   =            3300
+     number of compressed subscripts         =          495348
+     size of stack storage                   =         2416017
+     maximum order of a front matrix         =            1815
+     maximum size of a front matrix          =         1648020
+     maximum size of a front trapezoid       =          114080
+     no. of floating point ops for factor    =      1.7172D+10
+     no. of floating point ops for solve     =      9.3064D+07
+     actual no. of nonzeroes in the factor l =        28301450.
+     actual number of compressed subscripts  =          495348
+     actual size of stack storage used       =         2550738
+     near zero pivot monitoring activated
+     number of pivots adjusted               =              0.
+     negative pivot monitoring activated
+     number of negative pivots encountered   =              0.
+     factorization panel size                =              64
+     factorization update panel size         =              32
+     solution block size                     =               2
+     number of cores used                    =               2
+     time (cpu & wall) for structure input   =        1.500000        2.535670
+     time (cpu & wall) for ordering          =        4.718750        7.841956
+     time (cpu & wall) for symbolic factor   =        0.171875        0.309316
+     time (cpu & wall) for value input       =        1.984375        3.554217
+     time (cpu & wall) for numeric factor    =       16.078125       21.357705
+     computational rate (mflops) for factor  =     1068.026627      804.012676
+     condition number estimate               =      0.0000D+00
+     time (cpu & wall) for numeric solve     =        0.484375        0.806978
+     computational rate (mflops) for solve   =      192.132461      115.324256
+     effective I/O rate (MB/sec) for solve   =      732.024667      439.385407
+
+     no input or output performed
+
+
+
+
+  Performance statistics for Boeing sparse solver: icalls =      7
+
+ ===========================
+ = multifrontal statistics =
+ ===========================
+
+     number of equations                     =           87939
+     no. of nonzeroes in lower triangle of a =         3084175
+     number of compressed nodes              =           29172
+     no. of compressed nonzeroes in l. tri.  =          330095
+     amount of workspace currently in use    =        35812997
+     max. amt. of workspace used             =        59738140
+     no. of nonzeroes in the factor l        =        28032966.
+     number of super nodes                   =            3278
+     number of compressed subscripts         =          487909
+     size of stack storage                   =         1956315
+     maximum order of a front matrix         =            1578
+     maximum size of a front matrix          =         1245831
+     maximum size of a front trapezoid       =           98912
+     no. of floating point ops for factor    =      1.6306D+10
+     no. of floating point ops for solve     =      9.2717D+07
+     actual no. of nonzeroes in the factor l =        28032966.
+     actual number of compressed subscripts  =          487909
+     actual size of stack storage used       =         2104689
+     near zero pivot monitoring activated
+     number of pivots adjusted               =              0.
+     negative pivot monitoring activated
+     number of negative pivots encountered   =              0.
+     factorization panel size                =              64
+     factorization update panel size         =              32
+     solution block size                     =               2
+     number of cores used                    =               2
+     time (cpu & wall) for structure input   =        1.453125        2.476112
+     time (cpu & wall) for ordering          =        4.531250        6.795822
+     time (cpu & wall) for symbolic factor   =        0.093750        0.261707
+     time (cpu & wall) for value input       =        2.031250        3.470322
+     time (cpu & wall) for numeric factor    =       16.296875       19.780668
+     computational rate (mflops) for factor  =     1000.565569      824.344859
+     condition number estimate               =      0.0000D+00
+     time (cpu & wall) for numeric solve     =        0.515625        0.704599
+     computational rate (mflops) for solve   =      179.814224      131.587822
+     effective I/O rate (MB/sec) for solve   =      685.092181      501.349594
+
+     no input or output performed
+
+
+
+
+  Performance statistics for Boeing sparse solver: icalls =      8
+
+ ===========================
+ = multifrontal statistics =
+ ===========================
+
+     number of equations                     =           87939
+     no. of nonzeroes in lower triangle of a =         3084115
+     number of compressed nodes              =           29172
+     no. of compressed nonzeroes in l. tri.  =          330035
+     amount of workspace currently in use    =        35891718
+     max. amt. of workspace used             =        59738138
+     no. of nonzeroes in the factor l        =        28104561.
+     number of super nodes                   =            3304
+     number of compressed subscripts         =          491459
+     size of stack storage                   =         2172138
+     maximum order of a front matrix         =            1647
+     maximum size of a front matrix          =         1357128
+     maximum size of a front trapezoid       =          103328
+     no. of floating point ops for factor    =      1.6576D+10
+     no. of floating point ops for solve     =      9.3588D+07
+     actual no. of nonzeroes in the factor l =        28104561.
+     actual number of compressed subscripts  =          491459
+     actual size of stack storage used       =         2319084
+     near zero pivot monitoring activated
+     number of pivots adjusted               =              0.
+     negative pivot monitoring activated
+     number of negative pivots encountered   =              0.
+     factorization panel size                =              64
+     factorization update panel size         =              32
+     solution block size                     =               2
+     number of cores used                    =               2
+     time (cpu & wall) for structure input   =        1.484375        2.352411
+     time (cpu & wall) for ordering          =        4.593750        7.253341
+     time (cpu & wall) for symbolic factor   =        0.125000        0.253617
+     time (cpu & wall) for value input       =        2.062500        3.056780
+     time (cpu & wall) for numeric factor    =       16.359375       20.533032
+     computational rate (mflops) for factor  =     1013.264272      807.302611
+     condition number estimate               =      0.0000D+00
+     time (cpu & wall) for numeric solve     =        0.453125        0.706753
+     computational rate (mflops) for solve   =      206.540096      132.420327
+     effective I/O rate (MB/sec) for solve   =      786.917754      504.521439
+
+     no input or output performed
+
+
+
+
+  Performance statistics for Boeing sparse solver: icalls =      9
+
+ ===========================
+ = multifrontal statistics =
+ ===========================
+
+     number of equations                     =           87939
+     no. of nonzeroes in lower triangle of a =         3084089
+     number of compressed nodes              =           29172
+     no. of compressed nonzeroes in l. tri.  =          330009
+     amount of workspace currently in use    =        35959389
+     max. amt. of workspace used             =        59738141
+     no. of nonzeroes in the factor l        =        28169766.
+     number of super nodes                   =            3292
+     number of compressed subscripts         =          492751
+     size of stack storage                   =         2204448
+     maximum order of a front matrix         =            1704
+     maximum size of a front matrix          =         1452660
+     maximum size of a front trapezoid       =          106976
+     no. of floating point ops for factor    =      1.6552D+10
+     no. of floating point ops for solve     =      9.3275D+07
+     actual no. of nonzeroes in the factor l =        28169766.
+     actual number of compressed subscripts  =          492751
+     actual size of stack storage used       =         2369730
+     near zero pivot monitoring activated
+     number of pivots adjusted               =              0.
+     negative pivot monitoring activated
+     number of negative pivots encountered   =              0.
+     factorization panel size                =              64
+     factorization update panel size         =              32
+     solution block size                     =               2
+     number of cores used                    =               2
+     time (cpu & wall) for structure input   =        1.453125        2.092263
+     time (cpu & wall) for ordering          =        4.359375        7.252747
+     time (cpu & wall) for symbolic factor   =        0.125000        0.283945
+     time (cpu & wall) for value input       =        2.109375        2.954593
+     time (cpu & wall) for numeric factor    =       16.812500       20.711784
+     computational rate (mflops) for factor  =      984.490157      799.146050
+     condition number estimate               =      0.0000D+00
+     time (cpu & wall) for numeric solve     =        0.437500        0.657217
+     computational rate (mflops) for solve   =      213.199198      141.923747
+     effective I/O rate (MB/sec) for solve   =      812.288931      540.729468
+
+     no input or output performed
