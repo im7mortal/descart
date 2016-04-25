@@ -73,8 +73,8 @@ func main()  {
 				strconv.FormatFloat(a, 'f', 3, 64),
 				strconv.FormatFloat(b, 'f', 3, 64),
 			)*/
-			//str += strconv.FormatFloat(obj.pow, 'f', 3, 64) + "  "
-			str += strconv.FormatFloat(obj.base, 'f', 3, 64) + "  "
+			str += strconv.FormatFloat(obj.pow, 'f', 3, 64) + "  "
+			//str += strconv.FormatFloat(obj.base, 'f', 3, 64) + "  "
 		}
 
 
