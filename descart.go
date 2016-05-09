@@ -6,6 +6,7 @@ import (
 	"math"
 	//"fmt"
 	"strconv"
+	"fmt"
 )
 
 type jsonT struct  {
@@ -17,14 +18,21 @@ type data struct  {
 	Data []graph `json:"data"`
 }
 
+type exp struct {
+	base float64
+	pow  float64
+}
+
+
 type graph struct {
 	L int  `json:"l"`
-	base float64  `json:"l"`
-	pow  float64  `json:"l"`
+	first exp
+	second exp
 	Data [][2]float64 `json:"data"`
 }
 
 func main()  {
+	fmt.Println()
 	//fmt.Printf("%s\n",strconv.FormatFloat(float64(0), 'f', 0, 64))
 	println("        200",
 	"     250",
@@ -56,7 +64,7 @@ func main()  {
 	reader.Encode(&arrT)
 
 
-
+	second := make(map[int][][2]float64)
 
 	for _, o := range arrT{
 
@@ -64,8 +72,8 @@ func main()  {
 		for _, obj := range o.Data{
 
 			a, b := Appr(obj.Data)
-			obj.base = a
-			obj.pow = b
+			obj.first.base = a
+			obj.first.pow = b
 
 /*			fmt.Printf("w=%s, l=%s, %s*x^%s\n",
 				strconv.FormatFloat(float64(o.W), 'f', 3, 64),
@@ -73,7 +81,9 @@ func main()  {
 				strconv.FormatFloat(a, 'f', 3, 64),
 				strconv.FormatFloat(b, 'f', 3, 64),
 			)*/
-			str += strconv.FormatFloat(obj.pow, 'f', 3, 64) + "  "
+			// TODO меняем знак у степени!!!!!!!!!!!!!!!!!
+			str += strconv.FormatFloat(-1 * obj.first.pow, 'f', 3, 64) + "  "
+			second[obj.L] = append(second[obj.L], [2]float64{o.W  ,-1 * obj.first.pow})
 			//str += strconv.FormatFloat(obj.base, 'f', 3, 64) + "  "
 		}
 
@@ -81,8 +91,17 @@ func main()  {
 	println(str)
 	}
 
+	sec := make(map[int]exp)
 
-	
+	for i, p := range second{
+		a, b := Appr(p)
+		sec[i] = exp{a, b}
+	}
+	fmt.Printf("%v\n", sec)
+
+	for _, p := range sec{
+		println(strconv.FormatFloat(p.base, 'f', 3, 64) + "      " + strconv.FormatFloat(p.pow, 'f', 3, 64))
+	}
 }
 
 
