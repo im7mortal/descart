@@ -34,6 +34,7 @@ type graph struct {
 func main()  {
 	fmt.Println()
 	//fmt.Printf("%s\n",strconv.FormatFloat(float64(0), 'f', 0, 64))
+	/*
 	println("        200",
 	"     250",
 	"     300",
@@ -47,6 +48,7 @@ func main()  {
 	"   1500",
 	"   1750",
 	"   2000")
+	*/
 	arr := []string{"1.1","1.6","2","2.5","5"}
 	arrT := []data{}
 	for _, W := range arr{
@@ -67,7 +69,6 @@ func main()  {
 	second := make(map[int][][2]float64)
 
 	for _, o := range arrT{
-
 		str := "" + strconv.FormatFloat(o.W, 'f', 3, 64) + "   "
 		for _, obj := range o.Data{
 
@@ -85,10 +86,16 @@ func main()  {
 			str += strconv.FormatFloat(-1 * obj.first.pow, 'f', 3, 64) + "  "
 			second[obj.L] = append(second[obj.L], [2]float64{o.W  ,-1 * obj.first.pow})
 			//str += strconv.FormatFloat(obj.base, 'f', 3, 64) + "  "
+			if o.W == 1.1 {
+				if obj.L == 200 {
+					fmt.Printf("%f\n", obj.first.base)
+					fmt.Printf("%f\n", obj.first.pow)
+				}
+			}
 		}
 
 
-	println(str)
+	//println(str)
 	}
 
 	sec := make(map[int]exp)
@@ -97,10 +104,14 @@ func main()  {
 		a, b := Appr(p)
 		sec[i] = exp{a, b}
 	}
-	fmt.Printf("%v\n", sec)
+	//fmt.Printf("%v\n", sec)
 
-	for _, p := range sec{
+/*	for _, p := range sec{
 		println(strconv.FormatFloat(p.base, 'f', 3, 64) + "      " + strconv.FormatFloat(p.pow, 'f', 3, 64))
+	}*/
+	for i, p := range second{
+		a, b := Appr(p)
+		sec[i] = exp{a, b}
 	}
 }
 
