@@ -30,6 +30,12 @@
 		d2_external = parseFloat(d2_external);
 		d2_internal = parseFloat(d2_internal);
 
+		l1 = 92.1;
+		l2 = 96.5;
+		d1 = 5;
+		d2_external = 11.4;
+		d2_internal = 10;
+
 		// моменты иннерции
 		var J1, J2;
 		J1 = Math.PI * Math.pow(d1, 4) / 64;
@@ -41,25 +47,22 @@
 		var P;
 		var pow; // степень
 		pow = 0.1867 / Math.pow((J2 / J1), 0.36);
-		console.log("");
-		P = (36511 / l1) * Math.pow((l1 / l2), pow);
-
+		console.log(pow);
+		console.log(Math.pow((l2 / l1), pow));
+		P = (36511 / l1) * Math.pow((l2 / l1), pow);
+		console.log(P);
 		P = Math.pow(P, 2) * J1;
+		console.log(P);
+
 		document.getElementById("P").value = P;
-//		J1 = Math.floor(J1 * 1000) / 1000;
-//		J2 = Math.floor(J2 * 1000) / 1000;
+		J1 = Math.floor(J1 * 100000000);
+		J2 = Math.floor(J2 * 100000000);
 		P = Math.floor(P * 1000) / 1000;
 		document.getElementById("res").innerHTML = "J1=" + J1 + "  кг·м²"
 				+ "<br/>"
 				+ "  J2=" + J2 + "  кг·м²"
 				+ "<br/>"
 				+ "P критическая = " + P + "  кг"
-
-		console.log(l1);
-		console.log(l2);
-		console.log(d1);
-		console.log(d2_external);
-		console.log(d2_internal);
 	}
 </script>
 <style>
