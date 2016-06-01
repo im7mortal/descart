@@ -1,0 +1,29 @@
+/COM,ANSYS RELEASE 15.0.7  UP20140420       02:18:47    06/01/2016
+
+ *** WARNING ***                         CP =       1.047   TIME= 02:18:48
+ Material number 4 (used by element 2188 ) should normally have at least 
+ one MP or one TB type command associated with it.  Output of energy by  
+ material may not be available.                                          
+
+ *** WARNING ***                         CP =       1.625   TIME= 02:18:49
+ Element shape checking is currently inactive.  Issue SHPP,ON or         
+ SHPP,WARN to reactivate, if desired.                                    
+
+ *** WARNING ***                         CP =       1.656   TIME= 02:18:49
+ Material number 4 (used by element 2188 ) should normally have at least 
+ one MP or one TB type command associated with it.  Output of energy by  
+ material may not be available.                                          
+
+ *** WARNING ***                         CP =       1.734   TIME= 02:18:49
+ Smoothing on certain contact/target nodes (for example 1534) may have   
+ an accuracy issue.  You may switch contact and target surfaces, or      
+ split the current pair into multiple pairs, or use Gauss detection.     
+
+ *** WARNING ***                         CP =       1.734   TIME= 02:18:49
+ Smoothing on certain contact/target nodes (for example 2) may have an   
+ accuracy issue.  You may switch contact and target surfaces, or split   
+ the current pair into multiple pairs, or use Gauss detection.           
+
+ *** WARNING ***                         CP =       1.734   TIME= 02:18:49
+ Overconstraint may occur for Lagrange multiplier or MPC based contact   
+ algorithm.                                                              

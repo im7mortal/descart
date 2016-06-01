@@ -1,0 +1,29 @@
+/COM,ANSYS RELEASE 15.0.7  UP20140420       21:18:31    06/01/2016
+
+ *** WARNING ***                         CP =       0.922   TIME= 21:18:32
+ KEYOPT(2) > 1 may only be used if KEYOPT(4) > 0 for CONTA174.           
+ KEYOPT(4) = 2 is set.                                                   
+
+ *** WARNING ***                         CP =       0.922   TIME= 21:18:32
+ Using 1 iteration per substep may result in unconverged solutions for   
+ nonlinear analysis and the program may not indicate divergence in this  
+ case.  Check your results.                                              
+
+ *** WARNING ***                         CP =       0.922   TIME= 21:18:32
+ Element shape checking is currently inactive.  Issue SHPP,ON or         
+ SHPP,WARN to reactivate, if desired.                                    
+
+ *** WARNING ***                         CP =       0.969   TIME= 21:18:32
+ Material number 4 (used by element 2236 ) should normally have at least 
+ one MP or one TB type command associated with it.  Output of energy by  
+ material may not be available.                                          
+
+ *** WARNING ***                         CP =       1.062   TIME= 21:18:32
+ Smoothing on certain contact/target nodes (for example 1586) may have   
+ an accuracy issue.  You may switch contact and target surfaces, or      
+ split the current pair into multiple pairs, or use Gauss detection.     
+
+ *** WARNING ***                         CP =       1.062   TIME= 21:18:32
+ Smoothing on certain contact/target nodes (for example 4) may have an   
+ accuracy issue.  You may switch contact and target surfaces, or split   
+ the current pair into multiple pairs, or use Gauss detection.           
