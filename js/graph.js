@@ -71,7 +71,7 @@ function getDataPath() {
 	global.data = obj;
 	//global.csv = csv;
 
-	document.getElementById('csv').innerHTML = JSON.stringify(global);
+	document.getElementById('csv').innerHTML = JSON.stringify(obj);
 	return data
 }
 
