@@ -28,7 +28,7 @@ type exp struct {
 
 
 type graph struct {
-	L int  `json:"l"`
+	L float64 `json:"l"`
 	first exp `json:"first"`
 	Data [][2]float64 `json:"data"`
 }
@@ -71,25 +71,36 @@ func main()  {
 
 	second := make(map[int][][2]float64)
 
-
-
-
-
-
-
-
+	r := new(regression.Regression)
+	r.SetObserved("Murders per annum per 1,000,000 inhabitants")
+	r.SetVar(0, "Inhabitants")
+	r.SetVar(1, "Percent with incomes below $5000")
+	r.SetVar(2, "Percent unemployed")
 	// регрессионный анализ
+
+
 	{
-		for j, o := range arrT{
-			for i, obj := range o.Data {
-				b, a := Appr(obj.Data)
-				obj.first = *new(exp)
-				obj.first.base = b
-				obj.first.pow = a
-				arrT[j].Data[i] = obj // dirty hack for me
+		for _, o := range arrT{
+			for _, obj := range o.Data {
+				for _, obj_ := range obj.Data{
+					r.Train(
+						regression.DataPoint(obj_[1], []float64{obj_[0], obj.L, o.W}),
+					)
+				}
 			}
 		}
 	}
+
+
+
+
+	r.Run()
+
+	fmt.Printf("Regression formula:\n%v\n", r.Formula)
+	fmt.Printf("Regression:\n%s\n", r)
+
+
+
 
 
 	return
@@ -131,7 +142,6 @@ func main()  {
 	}
 	sec := make(map[int]exp)
 
-	regression.Regression{}
 
 
 	for i, p := range second{
