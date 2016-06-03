@@ -1,0 +1,77 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Title</title>
+</head>
+<body>
+<p>l1: <input type="text" id="l1"> м</p>
+<p>l2: <input type="text" id="l2"> м</p>
+<p>d1: диаметр штока<input type="text" id="d1"> м</p>
+<p>d2_1: наружный диаметр цилиндра <input type="text" id="d2_external"> м</p>
+<p>d2_2: внутренний диаметр цилиндра <input type="text" id="d2_internal"> м</p>
+<br>
+<input type="button" value="РАСЧИТАТЬ" onclick="calc()">
+<br>
+<p>J1: <input type="text" id="J1" disabled> кг·м²</p>
+<p>J2: <input type="text" id="J2" disabled> кг·м²</p>
+<p>P_критическая: <input type="text" id="P" disabled> кг</p>
+<h1 id="res"></h1>
+<script>
+	function calc () {
+		var l1 =document.getElementById("l1").value;
+		var l2 =document.getElementById("l2").value;
+		var d1 =document.getElementById("d1").value;
+		var d2_external =document.getElementById("d2_external").value;
+		var d2_internal =document.getElementById("d2_internal").value;
+		l1 = parseFloat(l1);
+		l2 = parseFloat(l2);
+		d1 = parseFloat(d1);
+		d2_external = parseFloat(d2_external);
+		d2_internal = parseFloat(d2_internal);
+
+		l1 = 92.1;
+		l2 = 96.5;
+		d1 = 7;
+		d2_external = 11.4;
+		d2_internal = 10;
+
+		// моменты иннерции
+		var J1, J2;
+		J1 = Math.PI * Math.pow(d1, 4) / 64;
+		document.getElementById("J1").value = J1;
+		J2 = Math.PI * (Math.pow(d2_external, 4) - Math.pow(d2_internal, 4)) / 64;
+		document.getElementById("J2").value = J2;
+
+		// критическая сила
+		var P;
+		var pow; // степень
+		pow = 0.41882*Math.pow(Math.sqrt(J2 / J1), (0.25 * Math.log(l1) - 0.7715));
+
+
+		P = Math.pow(Math.sqrt(J2 / J1), 0.1629) *2290.4  * Math.pow((l2 / l1), pow) / l1;
+		console.log(P);
+		P = Math.pow(P, 2) * J1;
+		console.log(P);
+
+		document.getElementById("P").value = P;
+		J1 = Math.floor(J1 * 100000000);
+		J2 = Math.floor(J2 * 100000000);
+		P = Math.floor(P * 1000) / 1000;
+		document.getElementById("res").innerHTML = "J1=" + J1 + "  кг·м²"
+				+ "<br/>"
+				+ "  J2=" + J2 + "  кг·м²"
+				+ "<br/>"
+				+ "J2/J1 = " + Math.sqrt(J2 / J1)
+				+ "<br/>"
+				+ "P критическая = " + P + "  кг"
+	}
+</script>
+<style>
+	p{
+		font-size: 200%;
+	}
+</style>
+
+</body>
+</html>
