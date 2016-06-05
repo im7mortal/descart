@@ -1,0 +1,57 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>results</title>
+</head>
+<body>
+<table id="results">
+	<tr>
+		<th>D</th>
+		<th>Result</th>
+	</tr>
+</table>
+<script>
+
+	var l1 = 92.1;
+	var l2 = 96.5;
+	var d2_external = 11.4;
+	var d2_internal = 10;
+
+	var results = document.getElementById("results");
+
+	var diameters = [4.5, 5, 5.5, 6, 7];
+
+	for (var i =0; i < diameters.length; i++) {
+		results.innerHTML += "<tr><th>" + diameters[i] + "</th>" + "<th>" + calc(diameters[i]) + "</th></tr>"
+	}
+
+
+	function calc (d) {
+		var d1 = d;
+		// моменты иннерции
+		var J1, J2;
+		J1 = Math.PI * Math.pow(d1, 4) / 64;
+		J2 = Math.PI * (Math.pow(d2_external, 4) - Math.pow(d2_internal, 4)) / 64;
+
+		// переменные
+		var W = Math.sqrt(J2 / J1);
+		var L = l2 / l1;
+
+		// критическая сила
+		var pow; // степень
+		var coefficient;
+
+		coefficient = (447.4 * Math.log(W) + 2272.2)/ l1;
+		pow = 0.41882 * Math.pow(W, (0.25 * Math.log(l1) - 0.7715));
+
+		var P;
+
+		P = coefficient * Math.pow(L, pow);
+		P = Math.pow(P, 2) * J1;
+
+		return Math.floor(P * 1000) / 1000;
+	}
+</script>
+</body>
+</html>
