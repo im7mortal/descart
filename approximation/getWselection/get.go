@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"strconv"
 	"io/ioutil"
-	"sort"
 )
 
 
@@ -36,6 +35,7 @@ type power struct {
 type graph struct {
 	L         float64 `json:"l"`
 	Data      [][2]float64 `json:"data"`
+	Norm      [][2]float64
 	firstIter logarithm
 }
 
@@ -47,8 +47,6 @@ func check(e error) {
 
 func main()  {
 
-	arr := make([]int,0)
-
 	fmt.Println(strconv.FormatFloat(math.Log(100), 'f', 10, 64))
 	bytesArr, err := ioutil.ReadFile("data/data.json")
 	check(err)
@@ -56,31 +54,79 @@ func main()  {
 	err = json.Unmarshal(bytesArr, &dataArr)
 	check(err)
 
-	// выбираю данные для диаметра 900 мм
+	G := make(map[string]map[string]map[string]float64)
+
 	for _, object := range dataArr{
-		first := 0.
+
 		for _, object_ := range object.Data{
-			arr = append(arr, len(object_.Data))
-			if object_.L != 1000 &&  object_.L != 800 {
-				continue
+			object_.Norm = make([][2]float64, 0)
+			object_.Norm = norm(object_.Data, 0.3, 2.5)
+			name := strconv.FormatFloat(object_.L, 'f', 1, 64)
+			g, ok :=  G[name]
+			if !ok {
+				G[name] = make(map[string]map[string]float64)
+				g = G[name]
 			}
-			for i, selection := range object_.Data{
-				if selection[0] >= 1.05 {
-					if object_.L == 800 {
-						first = object_.Data[i-1][1]
-					} else {
-						a := (object_.Data[i-1][1] - first) * 0.6 + first
-						fmt.Println(strconv.FormatFloat(object.W, 'f', 1, 64) + "  " + strconv.FormatFloat(a, 'f', 10, 64))
-					}
-					break
+			for _, object_1 := range object_.Norm{
+				name := strconv.FormatFloat(object_1[0], 'f', 5, 64)
+
+				g_, ok :=  g[name]
+				println(ok)
+				if !ok {
+					g[name] = make(map[string]float64)
+					g_ = g[name]
 				}
+				g_[strconv.FormatFloat(object_1[1], 'f', 10, 64)] = object_1[1]
+				//fmt.Printf("%v\n", g_)
 			}
 		}
 	}
 
-	sort.Ints(arr)
-	println(arr[0])
-	println(len(arr))
-	println(arr[len(arr) - 1])
+	//fmt.Printf("%v", G)
+	byteArray, _ := json.Marshal(G)
+	ioutil.WriteFile("dataW.json", byteArray, 0644)
+}
 
+func norm(in [][2]float64, first, last float64) ( out [][2]float64, ) {
+
+	i_ := 369
+
+	currentV := first
+	n := (last - first) / float64(i_)
+	for j := 0; j < i_; j++ {
+		out = append(out, [2]float64{0., 0.})
+		if j == 0 {
+			out[j][0] = first
+			out[j][1] = in[j][1]
+			continue
+		}
+		if j == i_ - 1 {
+			out[j][0] = last
+			out[j][1] = in[len(in) - 1][1]
+			continue
+		}
+		currentV += n
+		out[j][0] = currentV
+		tempArr := []float64{}
+		for _, o2 := range in{
+			if o2[0] > in[j - 1][0] && o2[0] < currentV + n {
+				tempArr = append(tempArr, o2[1])
+			}
+		}
+		if len(tempArr) == 0 {
+			out[j][1] = in[j + 1][0]
+		} else {
+			out[j][1] = average(tempArr)
+		}
+	}
+	return
+}
+
+func average(o []float64)  (t float64) {
+	summ := 0.
+	for _, i := range o{
+		summ+=i
+	}
+	t = summ / float64(len(o))
+	return
 }

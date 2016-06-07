@@ -58,7 +58,6 @@ func main() {
 			out[i][j][0] = currentV
 			tempArr := []float64{}
 			for _, o2 := range o{
-				println(o2[0] > o[j - 1][0])
 				if o2[0] > o[j - 1][0] && o2[0] < currentV + n {
 					tempArr = append(tempArr, o2[1])
 				}
