@@ -71,7 +71,6 @@ func main()  {
 				name := strconv.FormatFloat(object_1[0], 'f', 5, 64)
 
 				g_, ok :=  g[name]
-				println(ok)
 				if !ok {
 					g[name] = make(map[string]float64)
 					g_ = g[name]
