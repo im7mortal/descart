@@ -61,12 +61,12 @@ func main()  {
 		first := 0.
 		for _, object_ := range object.Data{
 			arr = append(arr, len(object_.Data))
-			if object_.L != 1000 &&  object_.L != 800 {
+			if object_.L != 500 &&  object_.L != 400 {
 				continue
 			}
 			for i, selection := range object_.Data{
-				if selection[0] >= 1.05 {
-					if object_.L == 800 {
+				if selection[0] >= 2 {
+					if object_.L == 400 {
 						first = object_.Data[i-1][1]
 					} else {
 						a := (object_.Data[i-1][1] - first) * 0.6 + first
