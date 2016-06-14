@@ -502,11 +502,12 @@
 }</ReferenceList>
     </ReferenceCache>
     <base-designpoint-name valType="String">0</base-designpoint-name>
-    <timestamp-max valType="Int64">2813</timestamp-max>
+    <timestamp-max valType="Int64">3022</timestamp-max>
     <framework-build-version valType="String">15.0.492.0</framework-build-version>
-    <last-saved-utc valType="String">06/01/2016 18:29:35</last-saved-utc>
+    <last-saved-utc valType="String">06/13/2016 20:48:45</last-saved-utc>
     <logHistory valType="StringArray">
       <ArrayEntry Index="0">petr@PETER:C:\Users\petr\AppData\Local\Temp\WorkbenchLogs\CoreEvents136.log</ArrayEntry>
+      <ArrayEntry Index="1">petr@PETER:C:\Users\petr\AppData\Local\Temp\WorkbenchLogs\CoreEvents10704.log</ArrayEntry>
     </logHistory>
     <expression-scope-container valType="String">Parameters</expression-scope-container>
   </Project>
@@ -598,10 +599,10 @@
       <maxUpdateOrder valType="Double">1</maxUpdateOrder>
       <deleted-sources valType="String">[]</deleted-sources>
       <last-updated valType="Int64">0</last-updated>
-      <last-modified-by-usage valType="String">{"Extrinsic": 1259, "Input": 2805, "Output": 1259}</last-modified-by-usage>
+      <last-modified-by-usage valType="String">{"Extrinsic": 3019, "Input": 3020, "Output": 1259}</last-modified-by-usage>
       <outputs-generated-by-type valType="String">{}</outputs-generated-by-type>
       <last-update-regen-times valType="String">{}</last-update-regen-times>
-      <contains-significant-data valType="Boolean">false</contains-significant-data>
+      <contains-significant-data valType="Boolean">true</contains-significant-data>
     </Container>
     <Container Name="Schematic" Version="1.0">
       <Object Name="/Schematic/System:SYS" Version="1.0">
@@ -862,7 +863,7 @@
       <storage-scheme-id valType="String">version-1-format</storage-scheme-id>
       <deleted-sources valType="String">[]</deleted-sources>
       <last-updated valType="Int64">0</last-updated>
-      <last-modified-by-usage valType="String">{"Extrinsic": 2248, "Input": 1516, "Output": 1516}</last-modified-by-usage>
+      <last-modified-by-usage valType="String">{"Extrinsic": 3011, "Input": 1516, "Output": 1516}</last-modified-by-usage>
       <outputs-generated-by-type valType="String">{}</outputs-generated-by-type>
       <last-update-regen-times valType="String">{}</last-update-regen-times>
       <contains-significant-data valType="Boolean">false</contains-significant-data>
