@@ -1,29 +1,56 @@
+import json
+
 import numpy as np
 
 
 data_names = ["1.1", "1.3", "1.6", "2", "2.5", "3", "4", "5"]
 
+NUMBER_OF_PARAMETERS = 4
+
+class ARRAY:
+
+    def __init__(self):
+        self.data = []
+
+    def update(self, row):
+        for r in row:
+            self.data.append(r)
+
+    def finalize(self):
+        length = int(len(self.data) / NUMBER_OF_PARAMETERS)
+        arr = np.empty((length, NUMBER_OF_PARAMETERS))
+        print(arr.shape)
+
+        for index in range(length):
+            arr[index] = np.array([
+                self.data[index * NUMBER_OF_PARAMETERS + 0],
+                self.data[index * NUMBER_OF_PARAMETERS + 1],
+                self.data[index * NUMBER_OF_PARAMETERS + 2],
+                self.data[index * NUMBER_OF_PARAMETERS + 3],
+            ])
+        return arr
+
 
 def getAll():
-    data = np.empty((1, 4), dtype=np.float64)
+    data = ARRAY()
     for name in data_names:
-        np.concatenate(data, parse_file(name))
-    return data
+        parse_file(name, data)
+    return data.finalize()
 
-
+PATH = "../data/"
 PREFIX = ".json"
 
-def parse_file(name):
-    file = open(name + PREFIX)
-    model = json.loads(file)
-    points_count = len(model["data"]["data"]["data"])
-    array = np.empty((points_count, 4), dtype=np.float64)
-    
+def parse_file(name, arr):
+    file = open(PATH + name + PREFIX)
+    model = json.loads(file.read())
+    file.close()
     data = model["data"]
     W = data["W"]
-    data = data["data"]
-    for obj in data:
+    for obj in data["data"]:
         l = obj["l"]
-        data = data["data"]
-        for point in data:
-            
+        for point in obj["data"]:
+            arr.update([W, l, point[0], point[1]])
+
+res = getAll()
+
+np.savetxt('data.csv', res, delimiter=',', fmt='%f')
