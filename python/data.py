@@ -48,9 +48,14 @@ def parse_file(name, arr):
     W = data["W"]
     for obj in data["data"]:
         l = obj["l"]
-        for point in obj["data"]:
-            arr.update([W, l, point[0], point[1]])
+
+        length = len(obj["data"])
+        for i in range(0,length, 20):
+            arr.update([W, l, obj["data"][i][0], obj["data"][i][1]])
+        last = length - 1
+        arr.update([W, l, obj["data"][last][0], obj["data"][last][1]])
+        break
 
 res = getAll()
 
-np.savetxt('data.csv', res, delimiter=',', fmt='%f')
+np.savetxt('data_sparse_200.csv', res, delimiter=',', fmt='%f')
